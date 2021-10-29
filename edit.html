@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MyMiniIndex</title>
+    <style>
+      .row {
+        display: flex;
+        flex-direction: row;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div>
+        <button id="loadModel">Load..</button>
+        <div
+          id="model"
+          style="width: 500px; height: 700px; border-style: solid"
+        ></div>
+      </div>
+      <div>
+        <h1 id="name">Name</h1>
+        <div id="status">Status</div>
+        <div class="row">
+          <button id="approveMini">Approve</button>
+          <button id="rejectMini">Reject</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./dist/edit.js"></script>
+  </body>
+</html>

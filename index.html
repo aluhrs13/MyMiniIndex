@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MyMiniIndex</title>
+    <style>
+      #gallery {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        justify-content: space-between;
+      }
+
+      #gallery div {
+        flex-grow: 1;
+        max-width: 200px;
+        margin: 5px;
+      }
+
+      #gallery canvas {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MyMiniIndex</h1>
+    <div>
+      <div id="status"></div>
+      <div id="scanningDir"></div>
+      <div id="minisFound"></div>
+    </div>
+
+    <div style="display: flex; flex-direction: row">
+      <div style="width: 33%">
+        <button id="loadDirectory">Add Directory</button>
+        <button id="scanDirectories">Scan</button>
+
+        <h2>Directories</h2>
+        <div id="directoryList"></div>
+        <h2>Pending Minis</h2>
+        <div id="pendingList"></div>
+      </div>
+      <div>
+        <h2>Minis</h2>
+        <div id="gallery"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./dist/index.js"></script>
+  </body>
+</html>

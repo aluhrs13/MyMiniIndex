@@ -1,0 +1,17 @@
+{
+  "name": "myminiindex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/three": "^0.133.1",
+    "@types/wicg-native-file-system": "^2020.6.0",
+    "three": "^0.133.1"
+  }
+}
