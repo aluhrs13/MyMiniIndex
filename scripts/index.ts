@@ -40,10 +40,14 @@ async function renderMinis() {
     }
 
     var link = document.createElement("a");
-    link.href = "/edit?id=" + mini.name;
+    link.href = "#";
     link.innerText = mini.name;
+    link.addEventListener("click", () => {
+      var ele = document.createElement("edit-mini");
+      ele.name = mini.name;
+      document.body.appendChild(ele);
+    });
     container.appendChild(link);
-
     ele.appendChild(container);
   });
 }
@@ -56,8 +60,13 @@ async function renderPendingMinis() {
   minis.forEach((mini: Mini) => {
     var container = document.createElement("div");
     var link = document.createElement("a");
-    link.href = "/edit?id=" + mini.name;
+    link.href = "#";
     link.innerText = mini.name;
+    link.addEventListener("click", () => {
+      var ele = document.createElement("edit-mini");
+      ele.name = mini.name;
+      document.body.appendChild(ele);
+    });
     container.appendChild(link);
 
     ele.appendChild(container);

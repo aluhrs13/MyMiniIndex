@@ -4,13 +4,14 @@
     "noEmitOnError": false,
     "removeComments": false,
     "sourceMap": true,
-    "target": "es5",
+    "target": "es6",
     "outDir": "dist",
     "module": "ESNext",
     "moduleResolution": "node",
     "declaration": true,
     "declarationDir": "./types",
-    "lib": ["ES2015", "dom", "ES2018"]
+    "lib": ["ES2015", "dom", "ES2018"],
+    "experimentalDecorators": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "**/*.d.ts"]

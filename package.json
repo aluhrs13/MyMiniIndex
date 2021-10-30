@@ -5,13 +5,25 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
-    "clean": "tsc --build --clean"
+    "clean": "tsc --build --clean",
+    "start": "concurrently --raw \"tsc --watch --preserveWatchOutput\" \"wds --watch --node-resolve\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/three": "^0.133.1",
     "@types/wicg-native-file-system": "^2020.6.0",
+    "concurrently": "^6.3.0",
+    "lit": "^2.0.2",
     "three": "^0.133.1"
-  }
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.1.25"
+  },
+  "browserslist": [
+    ">2%",
+    "Edge > 14",
+    "Firefox > 63",
+    "Chrome > 67"
+  ]
 }
