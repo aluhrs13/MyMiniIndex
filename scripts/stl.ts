@@ -10,11 +10,11 @@ let camera, cameraTarget, scene, renderer;
 let getImageData = false;
 let imageData = "";
 
-export function renderSTL(blob, parentId) {
+export function renderSTL(blob, parentElement) {
   container = document.createElement("div");
-  container.style.height = "700px";
+  container.style.height = "400px";
   container.style.width = "500px";
-  document.getElementById(parentId).appendChild(container);
+  parentElement.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(
     70,

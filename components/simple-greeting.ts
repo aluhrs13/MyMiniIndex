@@ -16,3 +16,9 @@ export class SimpleGreeting extends LitElement {
     return html`<p>Hello, ${this.name}!</p>`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "simple-greeting": SimpleGreeting;
+  }
+}

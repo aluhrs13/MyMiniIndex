@@ -45,7 +45,7 @@ export async function traverseDirectory(directory) {
   }
 }
 
-export async function renderFile(entry: Mini, parentId: string) {
+export async function renderFile(entry: Mini, parentElement: HTMLElement) {
   await verifyPermission(entry.file);
   //@ts-ignore
   let file = await entry.file.getFile();
@@ -54,7 +54,7 @@ export async function renderFile(entry: Mini, parentId: string) {
   reader.onload = function (e) {
     //https://github.com/fenrus75/FenrusCNCtools/blob/master/javascript/stl2png.js
     if (e.target.readyState == FileReader.DONE) {
-      renderSTL(e.target.result, parentId);
+      renderSTL(e.target.result, parentElement);
     }
   };
 

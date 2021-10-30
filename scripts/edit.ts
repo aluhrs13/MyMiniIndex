@@ -13,7 +13,7 @@ ele3.addEventListener("click", rejectMini);
 
 const ele2 = document.getElementById("loadModel");
 ele2.addEventListener("click", () => {
-  renderFile(mini, "model");
+  //renderFile(mini, "model");
 });
 
 window.onload = async function () {
