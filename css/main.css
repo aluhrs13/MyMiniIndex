@@ -1,0 +1,26 @@
+.with-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+}
+
+.with-sidebar > :first-child {
+  flex-grow: 1;
+}
+
+.with-sidebar > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: 50%;
+}
+
+.grid {
+  display: grid;
+  grid-gap: 1rem;
+}
+
+@supports (width: min(318px, 100%)) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(318px, 100%), 1fr));
+  }
+}

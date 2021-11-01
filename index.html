@@ -4,65 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyMiniIndex</title>
-    <style>
-      .with-sidebar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--s1);
-      }
 
-      .with-sidebar > :first-child {
-        flex-grow: 1;
-      }
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
 
-      .with-sidebar > :last-child {
-        flex-basis: 0;
-        flex-grow: 999;
-        min-width: 50%;
-      }
-
-      .grid {
-        display: grid;
-        grid-gap: 1rem;
-      }
-
-      @supports (width: min(318px, 100%)) {
-        .grid {
-          grid-template-columns: repeat(
-            auto-fit,
-            minmax(min(318px, 100%), 1fr)
-          );
-        }
-      }
-    </style>
     <script type="module" src="./dist/components/edit-mini.js"></script>
     <script type="module" src="./dist/components/mini-card.js"></script>
     <script type="module" src="./dist/components/view-mini.js"></script>
+    <script type="module" src="./dist/components/nav-bar.js"></script>
   </head>
   <body>
+    <nav-bar></nav-bar>
     <h1>MyMiniIndex</h1>
-    <div>
-      <div id="status"></div>
-      <div id="scanningDir"></div>
-      <div id="minisFound"></div>
-    </div>
-
-    <div class="with-sidebar">
-      <div>
-        <button id="loadDirectory">Add Directory</button>
-        <button id="scanDirectories">Scan</button>
-
-        <h2>Directories</h2>
-        <div id="directoryList"></div>
-        <h2>Pending Minis</h2>
-        <div id="pendingList"></div>
-      </div>
-      <div>
-        <h2>Minis</h2>
-        <div class="grid" id="gallery"></div>
-      </div>
-    </div>
-
-    <script type="module" src="./dist/scripts/index.js"></script>
+    <div class="grid" id="gallery"></div>
+    <script type="module" src="./dist/scripts/pages/index.js"></script>
   </body>
 </html>

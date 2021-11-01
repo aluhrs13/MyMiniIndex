@@ -2,7 +2,6 @@ import { renderSTL } from "./stl.js";
 import { Mini } from "./Mini.js";
 import { DirectoryList } from "./DirectoryList.js";
 import { addMini } from "./idbAccessHelpers.js";
-import { renderPendingMinis } from "./index.js";
 
 let totalMiniCount = 0;
 
@@ -17,31 +16,21 @@ export async function showDirectoryDialog(dirs: DirectoryList) {
 
 //TODO: Report the results of scanning
 export async function scanAllDirectories(dirs: Array<FileSystemHandle>) {
-  totalMiniCount = 0;
-  document.getElementById("status").innerText = "Scanning...";
-
   //TODO: Removed async to get status reporting... not sure it's worth it.
   //TODO: If this stays like this, split permissions and traversal so approvals aren't interspersed randomly.
   for (let i = 0; i < dirs.length; i++) {
     await verifyPermission(dirs[i]).then(() => traverseDirectory(dirs[i]));
   }
-
-  document.getElementById("status").innerText = "Done!";
-  renderPendingMinis();
 }
 
 //TODO: Really need to keep full directory paths for keys
 export async function traverseDirectory(directory) {
-  document.getElementById("scanningDir").innerText = directory.name;
   for await (const entry of directory.values()) {
     if (entry.kind == "directory") {
       await traverseDirectory(entry);
     } else {
       if (entry.name.endsWith("stl") || entry.name.endsWith("STL")) {
         addMini(entry);
-        totalMiniCount++;
-        document.getElementById("minisFound").innerText =
-          totalMiniCount.toString();
       }
     }
   }

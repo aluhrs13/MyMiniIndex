@@ -105,6 +105,7 @@ export class EditMini extends LitElement {
 
   _close() {
     document.body.removeChild(this);
+    history.pushState(null, null, "#");
   }
 
   render() {

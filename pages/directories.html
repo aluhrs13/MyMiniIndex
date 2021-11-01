@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyMiniIndex</title>
+
+    <link rel="stylesheet" type="text/css" href="../css/main.css" />
+    <script type="module" src="../dist/components/nav-bar.js"></script>
+    <script type="module" src="../dist/components/scanning-status.js"></script>
+  </head>
+  <body>
+    <nav-bar></nav-bar>
+    <scanning-status></scanning-status>
+    <h1>Indexed Directories</h1>
+
+    <div>
+      <button id="loadDirectory">Add Directory</button>
+      <button id="scanDirectories">Scan</button>
+    </div>
+    <h2>Directories</h2>
+    <div id="directoryList"></div>
+
+    <script type="module" src="../dist/scripts/pages/directories.js"></script>
+  </body>
+</html>
