@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyMiniIndex</title>
     <style>
-      #gallery {
+      .with-sidebar {
         display: flex;
         flex-wrap: wrap;
-        align-content: flex-start;
-        justify-content: space-between;
+        gap: var(--s1);
       }
 
-      #gallery div {
+      .with-sidebar > :first-child {
         flex-grow: 1;
-        max-width: 200px;
-        margin: 5px;
       }
 
-      #gallery canvas {
-        height: 100%;
-        width: 100%;
+      .with-sidebar > :last-child {
+        flex-basis: 0;
+        flex-grow: 999;
+        min-width: 50%;
+      }
+
+      .grid {
+        display: grid;
+        grid-gap: 1rem;
+      }
+
+      @supports (width: min(318px, 100%)) {
+        .grid {
+          grid-template-columns: repeat(
+            auto-fit,
+            minmax(min(318px, 100%), 1fr)
+          );
+        }
       }
     </style>
     <script type="module" src="./dist/components/edit-mini.js"></script>
+    <script type="module" src="./dist/components/mini-card.js"></script>
+    <script type="module" src="./dist/components/view-mini.js"></script>
   </head>
   <body>
     <h1>MyMiniIndex</h1>
@@ -31,8 +47,8 @@
       <div id="minisFound"></div>
     </div>
 
-    <div style="display: flex; flex-direction: row">
-      <div style="width: 33%">
+    <div class="with-sidebar">
+      <div>
         <button id="loadDirectory">Add Directory</button>
         <button id="scanDirectories">Scan</button>
 
@@ -43,7 +59,7 @@
       </div>
       <div>
         <h2>Minis</h2>
-        <div id="gallery"></div>
+        <div class="grid" id="gallery"></div>
       </div>
     </div>
 

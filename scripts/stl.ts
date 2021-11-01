@@ -12,8 +12,8 @@ let imageData = "";
 
 export function renderSTL(blob, parentElement) {
   container = document.createElement("div");
-  container.style.height = "400px";
-  container.style.width = "500px";
+  container.style.height = "236px";
+  container.style.width = "314px";
   parentElement.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(

@@ -2,6 +2,7 @@ import { renderSTL } from "./stl.js";
 import { Mini } from "./Mini.js";
 import { DirectoryList } from "./DirectoryList.js";
 import { addMini } from "./idbAccessHelpers.js";
+import { renderPendingMinis } from "./index.js";
 
 let totalMiniCount = 0;
 
@@ -26,6 +27,7 @@ export async function scanAllDirectories(dirs: Array<FileSystemHandle>) {
   }
 
   document.getElementById("status").innerText = "Done!";
+  renderPendingMinis();
 }
 
 //TODO: Really need to keep full directory paths for keys

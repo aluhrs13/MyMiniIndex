@@ -4,57 +4,78 @@ import { getMini } from "../scripts/idbAccessHelpers";
 import { Mini } from "../scripts/Mini";
 import { until } from "lit/directives/until.js";
 
-
 @customElement("mini-card")
 export class MiniCard extends LitElement {
   static styles = css`
-    p {
-      color: blue;
+    .card {
+      background-color: white;
+      border-radius: 4px;
+      border-style: solid;
+      border-width: 1px;
+      width: 100%;
+    }
+
+    .card-thumbnail {
+      object-fit: contain;
+      border-radius: 4px 4px 0px 0px;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-bottom-color: gray;
+      width: 100%;
+    }
+
+    .mini-name {
+      text-align: left;
+      line-height: 0.4em;
+      white-space: nowrap;
+      overflow: wrap;
+      padding: 0rem 1rem;
+    }
+
+    h3 {
+      font-family: "Montserrat", sans-serif !important;
+      font-size: 1.25em;
+      line-height: 1em;
+      white-space: normal;
     }
   `;
 
-@property()
-name = "Somebody";
+  @property()
+  name: string;
 
-@state()
-_mini: Mini;
+  @state()
+  _mini: Promise<Mini>;
 
   render() {
+    console.log("Rendering...");
+    this._mini = getMini(this.name);
     return until(
-      getMini(this.name).then((data)=>{
-        this._mini = data;
+      this._mini.then((data) => {
         return html`
-        <div class="card">
-            <img src="${data.base64Image}" />
-            <a href="#">${data.name}</a>
-        </div>
-        `
-    }),
+          <div class="card">
+            <div>
+              <a href="#${data.name}">
+                <img
+                  class="card-thumbnail"
+                  width="314"
+                  height="236"
+                  src="${data.base64Image}"
+                />
+              </a>
+            </div>
+            <div class="mini-name">
+              <h3>${data.name}</h3>
+            </div>
+          </div>
+        `;
+      }),
       html`<span>Loading...</span>`
     );
   }
 }
 
 declare global {
-    interface HTMLElementTagNameMap {
-      "mini-card": MiniCard;
-    }
+  interface HTMLElementTagNameMap {
+    "mini-card": MiniCard;
   }
-
-/*
-var container = document.createElement("div");
-        var link = document.createElement("a");
-        link.href = "#";
-        link.innerText = mini.name;
-        link.addEventListener("click", () => {
-            var ele = document.createElement("edit-mini");
-            ele.name = mini.name;
-            document.body.appendChild(ele);
-        });
-        container.appendChild(link);
-
-        ele.appendChild(container);
-
-
-
-*/
+}

@@ -19,58 +19,101 @@ export class EditMini extends LitElement {
       align-items: stretch;
     }
     .imposter {
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      --margin: 4rem;
+      --margin: 1rem;
       overflow: auto;
       width: calc(100% - (var(--margin) * 2));
       max-height: calc(100% - (var(--margin) * 2));
-      padding: 1rem;
+
+      /* Custom design-y stuff */
+      min-height: 80%;
+      padding: 0.5rem;
+      background-color: white;
+      filter: drop-shadow(0.5rem 0.5rem 1rem #000);
+      border-radius: 0.5rem;
     }
-    .flex-item {
-      margin: 1rem;
+    .switcher {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(1rem);
     }
+
+    .switcher > * {
+      flex-grow: 1;
+      flex-basis: calc((30rem - 100%) * 999);
+    }
+
+    .switcher > :nth-last-child(n + 3),
+    .switcher > :nth-last-child(n + 3) ~ * {
+      flex-basis: 100%;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .stack > * {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .stack > * + * {
+      margin-top: var(--space, 1.5rem);
+    }
+
     textarea,
     input {
-      width: 100%;
+      width: calc(100% - 1rem);
+      padding: 0.5rem;
     }
   `;
 
   @property()
-  name = "Somebody";
+  name: string;
 
   @state()
-  _mini: Mini;
+  _mini: Promise<Mini>;
 
   _approveMini() {
-    this._mini.status = Status.Approved;
-    this._mini.base64Image = getImage();
-    updateMini(this._mini);
+    this._mini.then((data) => {
+      data.status = Status.Approved;
+      data.base64Image = getImage();
+      updateMini(data);
+      this._close();
+    });
   }
 
   _rejectMini() {
-    this._mini.status = Status.Rejected;
-    updateMini(this._mini);
-    this._close();
+    this._mini.then((data) => {
+      data.status = Status.Rejected;
+      updateMini(data);
+      this._close();
+    });
   }
 
   _loadModel() {
-    renderFile(this._mini, this.renderRoot.querySelector('#model'));
+    this.renderRoot.querySelector("#loadModelButton").remove();
+    this._mini.then((data) => {
+      renderFile(data, this.renderRoot.querySelector("#model"));
+    });
   }
 
   _close() {
     document.body.removeChild(this);
-    this._close();
   }
 
   render() {
+    this._mini = getMini(this.name);
+
     return until(
-      getMini(this.name).then((data)=>{
-        this._mini = data;
+      this._mini.then((data) => {
         return html`
-      <div class="imposter" style="background-color:white; border-style:solid;">
+      <div class="imposter">
       <button
           @click="${this._close}"
         style="position: absolute; right: .5rem; top: .5rem; width: 2rem; height: 2rem;"
@@ -78,23 +121,25 @@ export class EditMini extends LitElement {
         X
       </button>
 
-      <div class="row">
-        <div class="flex-item">
+      <h1 id="name">${data.name}</h1>
+      <div class="switcher">
+        <div align="center">
           <div
             id="model"
-            style="width: 500px; height: 400px; border-style: solid"
+            style="width: 314px; height: 236px; border-style: solid"
           >
-            <button
+          <button
+          id="loadModelButton"
             @click="${this._loadModel}"
               style="position: relative; left: 50%; top: 50%; transform: translate(-50%, -50%);"
             >
-              Load...
+              Load Model...
             </button>
           </div>
+
         </div>
-        <div class="flex-item">
+        <div class="stack">
           <div id="status">${data.status}</div>
-          <h1 id="name">${data.name}</h1>
           <div>
             <label>Tags</label>
             <br />
@@ -105,14 +150,15 @@ export class EditMini extends LitElement {
             <br />
             <input type="text"></textarea>
           </div>
-          <div class="row" style="position: absolute; bottom: 2rem;">
+          <div class="row">
             <button @click="${this._approveMini}">Approve</button>
             <button @click="${this._rejectMini}">Reject</button>
           </div>
         </div>
       </div>
     </div>
-    `}),
+    `;
+      }),
       html`<span>Loading...</span>`
     );
   }
