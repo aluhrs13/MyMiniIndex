@@ -16,8 +16,9 @@ async function renderPendingMinis() {
   let minis = await getPendingMinis();
 
   minis.forEach((mini: Mini) => {
-    var container = document.createElement("div");
+    var container = document.createElement("li");
     var link = document.createElement("a");
+    container.classList.add("pending-mini");
     link.href = `#${mini.name}`;
     link.innerText = mini.name;
     container.appendChild(link);
