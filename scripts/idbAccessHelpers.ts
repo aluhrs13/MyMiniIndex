@@ -34,7 +34,7 @@ export async function updateMini(mini: Mini) {
 }
 
 export async function getMini(name: string) {
-  console.log(`Getting mini ${name} from idb`)
+  console.log(`Getting mini ${name} from idb`);
   try {
     let mini = await get(name);
 

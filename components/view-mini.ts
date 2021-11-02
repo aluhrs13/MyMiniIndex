@@ -96,11 +96,11 @@ export class ViewMini extends LitElement {
               <div class="stack">
                 <div>
                   <h2>Tags</h2>
-                  TEXT
+                  ${data.tags.join(", ")}
                 </div>
                 <div>
                   <h2>URL</h2>
-                  LINK
+                  ${data.url}
                 </div>
               </div>
             </div>

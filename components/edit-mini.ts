@@ -83,6 +83,18 @@ export class EditMini extends LitElement {
     this._mini.then((data) => {
       data.status = Status.Approved;
       data.base64Image = getImage();
+      data.tags = this.renderRoot
+        .querySelector("#tagStr")
+        //@ts-ignore
+        .value.split(",")
+        .map((ele) => {
+          return ele.trim();
+        });
+      //@ts-ignore
+      console.log(this.renderRoot.querySelector("#url"));
+      //@ts-ignore
+      data.url = this.renderRoot.querySelector("#url").value;
+
       updateMini(data);
       this._close();
     });
@@ -144,12 +156,12 @@ export class EditMini extends LitElement {
           <div>
             <label>Tags</label>
             <br />
-            <textarea></textarea>
+            <textarea id="tagStr"></textarea>
           </div>
           <div>
             <label>URL</label>
             <br />
-            <input type="text"></textarea>
+            <input type="text" id="url"></textarea>
           </div>
           <div class="row">
             <button @click="${this._approveMini}">Approve</button>
