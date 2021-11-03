@@ -1,6 +1,12 @@
 import { Mini } from "../Mini.js";
 import { getMiniList } from "../idbAccessHelpers.js";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/service-worker.js");
+  });
+}
+
 window.onload = function () {
   search();
 

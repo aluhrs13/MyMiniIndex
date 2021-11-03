@@ -1,0 +1,22 @@
+{
+  "short_name": "MyMiniIndex",
+  "name": "MyMiniIndex: Organize your STL files to easily find the perfect 3d printable file",
+  "icons": [
+    {
+      "src": "/images/icons/favicon-196x196.png",
+      "type": "image/png",
+      "sizes": "196x196"
+    },
+    {
+      "src": "/images/icons/apple-touch-icon-60x60.png",
+      "type": "image/png",
+      "sizes": "60x60"
+    }
+  ],
+  "start_url": "/?source=pwa",
+  "background_color": "#18312d",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#18312d",
+  "description": "3d printing STL organizer and visualizer."
+}
