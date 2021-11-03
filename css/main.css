@@ -25,7 +25,7 @@
 }
 
 .grid {
-  display: grid;
+  display: inline-grid;
   grid-gap: 1rem;
 }
 
@@ -65,4 +65,37 @@ ul {
 body {
   margin-top: 66px;
   margin-bottom: 86px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+#gallery {
+  width: 100%;
+}
+
+#viewer {
+  max-width: 628px;
+  margin: 0px;
+}
+
+#viewerbg {
+  background-color: rgb(202, 227, 223);
+  z-index: -1;
+  width: 642px;
+  max-width: 642px;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+#searchString {
+  width: 80%;
+  font-size: large;
+  margin: 2rem;
 }

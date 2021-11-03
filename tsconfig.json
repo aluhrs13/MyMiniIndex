@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "declaration": true,
     "declarationDir": "./types",
-    "lib": ["ES2015", "dom", "ES2018"],
+    "lib": ["ES2015", "dom", "ES2018", "ES2021"],
     "experimentalDecorators": true
   },
   "include": ["**/*.ts", "**/*.tsx"],

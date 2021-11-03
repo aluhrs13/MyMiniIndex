@@ -1,9 +1,4 @@
-import {
-  set,
-  createStore,
-  values,
-  //@ts-ignore
-} from "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm";
+import { set, createStore, values } from "idb-keyval";
 
 export class DirectoryList {
   store: any;

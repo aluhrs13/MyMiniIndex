@@ -1,21 +1,23 @@
+//Lit Imports
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { until } from "lit/directives/until.js";
+
+//Local Imports
 import { getImage } from "../scripts/stl.js";
 import { renderFile } from "../scripts/fileAccessHelpers.js";
 import { getMini, updateMini } from "../scripts/idbAccessHelpers.js";
 import { Mini, Status } from "../scripts/Mini.js";
-import { until } from "lit/directives/until.js";
+import { getExcludeTagSuggestions } from "../scripts/settings.js";
 
 @customElement("edit-mini")
 export class EditMini extends LitElement {
   static styles = css`
-    p {
-      color: blue;
-    }
+    /* Utility */
     .row {
       display: flex;
       flex-direction: row;
-      flex-content: space-around;
+      gap: 1rem;
       align-items: stretch;
     }
     .imposter {
@@ -35,15 +37,16 @@ export class EditMini extends LitElement {
       filter: drop-shadow(0.5rem 0.5rem 1rem #000);
       border-radius: 0.5rem;
     }
+
     .switcher {
       display: flex;
       flex-wrap: wrap;
-      gap: var(1rem);
+      gap: 1rem;
     }
 
     .switcher > * {
       flex-grow: 1;
-      flex-basis: calc((30rem - 100%) * 999);
+      flex-basis: calc((50rem - 100%) * 999);
     }
 
     .switcher > :nth-last-child(n + 3),
@@ -66,10 +69,23 @@ export class EditMini extends LitElement {
       margin-top: var(--space, 1.5rem);
     }
 
+    /* Style */
     textarea,
     input {
       width: calc(100% - 1rem);
       padding: 0.5rem;
+    }
+
+    textarea {
+      height: 7rem;
+    }
+
+    #closeButton {
+      position: absolute;
+      right: 0.5rem;
+      top: 0.5rem;
+      width: 2rem;
+      height: 2rem;
     }
   `;
 
@@ -79,10 +95,17 @@ export class EditMini extends LitElement {
   @state()
   _mini: Promise<Mini>;
 
-  _approveMini() {
+  //Saves the current Mini
+  _saveMini() {
     this._mini.then((data) => {
       data.status = Status.Approved;
-      data.base64Image = getImage();
+
+      //If there's no load button, we can get the STL image
+      if (!this.renderRoot.querySelector("#loadModelButton")) {
+        data.base64Image = getImage();
+      }
+
+      //TODO: Figure out how to do this right in TS
       data.tags = this.renderRoot
         .querySelector("#tagStr")
         //@ts-ignore
@@ -90,17 +113,19 @@ export class EditMini extends LitElement {
         .map((ele) => {
           return ele.trim();
         });
-      //@ts-ignore
-      console.log(this.renderRoot.querySelector("#url"));
+
       //@ts-ignore
       data.url = this.renderRoot.querySelector("#url").value;
+      //@ts-ignore
+      data.name = this.renderRoot.querySelector("#nameStr").value;
 
       updateMini(data);
       this._close();
     });
   }
 
-  _rejectMini() {
+  //Removes the Mini from the user's index
+  _removeMini() {
     this._mini.then((data) => {
       data.status = Status.Rejected;
       updateMini(data);
@@ -121,56 +146,66 @@ export class EditMini extends LitElement {
   }
 
   render() {
-    this._mini = getMini(this.name);
+    this._mini = getMini(this.name.split(",").join("\\"));
 
     return until(
       this._mini.then((data) => {
+        var tagData = "";
+        if (data.tags.length > 0) {
+          tagData = data.tags.join(", ");
+        } else {
+          const toRemove = getExcludeTagSuggestions();
+          tagData = data.name
+            .split(" ")
+            .concat(data.fullPath.slice(0, -1))
+            .filter((ele) => {
+              return !toRemove.includes(ele);
+            })
+            .join(", ");
+        }
+
         return html`
-      <div class="imposter">
-      <button
-          @click="${this._close}"
-        style="position: absolute; right: .5rem; top: .5rem; width: 2rem; height: 2rem;"
-      >
-        X
-      </button>
+          <div class="imposter">
+            <button @click="${this._close}" id="closeButton">X</button>
 
-      <h1 id="name">${data.name}</h1>
-      <div class="switcher">
-        <div align="center">
-          <div
-            id="model"
-            style="width: 314px; height: 236px; border-style: solid"
-          >
-          <button
-          id="loadModelButton"
-            @click="${this._loadModel}"
-              style="position: relative; left: 50%; top: 50%; transform: translate(-50%, -50%);"
-            >
-              Load Model...
-            </button>
+            <h1>${data.name}</h1>
+            <div class="switcher">
+              <div align="center">
+                <div
+                  id="model"
+                  style="width: 628px; height: 472px; border-style: solid"
+                ></div>
+                <br />
+                <button @click="${this._loadModel}" id="loadModelButton">
+                  Load Model...
+                </button>
+              </div>
+              <div class="stack">
+                <div>
+                  <label>Name</label>
+                  <br />
+                  <input type="text" id="nameStr" value="${data.name}" />
+                </div>
+                <div>
+                  <label>Tags</label>
+                  <br />
+                  <textarea id="tagStr">${tagData}</textarea>
+                </div>
+                <div>
+                  <label>URL</label>
+                  <br />
+                  <input type="text" id="url" value="${data.url}" />
+                </div>
+                <div class="row">
+                  <button @click="${this._saveMini}">Save</button>
+                  <button @click="${this._removeMini}">
+                    Remove from Index
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-
-        </div>
-        <div class="stack">
-          <div id="status">${data.status}</div>
-          <div>
-            <label>Tags</label>
-            <br />
-            <textarea id="tagStr"></textarea>
-          </div>
-          <div>
-            <label>URL</label>
-            <br />
-            <input type="text" id="url"></textarea>
-          </div>
-          <div class="row">
-            <button @click="${this._approveMini}">Approve</button>
-            <button @click="${this._rejectMini}">Reject</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    `;
+        `;
       }),
       html`<span>Loading...</span>`
     );

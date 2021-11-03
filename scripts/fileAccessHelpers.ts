@@ -2,8 +2,9 @@ import { renderSTL } from "./stl.js";
 import { Mini } from "./Mini.js";
 import { DirectoryList } from "./DirectoryList.js";
 import { addMini } from "./idbAccessHelpers.js";
+import { getExcludeDirectories } from "../scripts/settings.js";
 
-let totalMiniCount = 0;
+const excludedDirectories = getExcludeDirectories();
 
 //TODO: Rename to addDirectoryDialog
 export async function showDirectoryDialog(dirs: DirectoryList) {
@@ -19,18 +20,35 @@ export async function scanAllDirectories(dirs: Array<FileSystemHandle>) {
   //TODO: Removed async to get status reporting... not sure it's worth it.
   //TODO: If this stays like this, split permissions and traversal so approvals aren't interspersed randomly.
   for (let i = 0; i < dirs.length; i++) {
-    await verifyPermission(dirs[i]).then(() => traverseDirectory(dirs[i]));
+    var directoryChain = new Array();
+    directoryChain.push(dirs[i].name);
+    await verifyPermission(dirs[i]).then(() =>
+      traverseDirectory(directoryChain, dirs[i])
+    );
   }
 }
 
 //TODO: Really need to keep full directory paths for keys
-export async function traverseDirectory(directory) {
+export async function traverseDirectory(directoryChain, directory) {
+  var enteredFirstDir = false;
   for await (const entry of directory.values()) {
     if (entry.kind == "directory") {
-      await traverseDirectory(entry);
+      if (excludedDirectories.includes(entry.name)) {
+        continue;
+      }
+
+      if (enteredFirstDir) {
+        directoryChain.pop();
+      }
+      enteredFirstDir = true;
+      directoryChain.push(entry.name);
+      traverseDirectory(JSON.parse(JSON.stringify(directoryChain)), entry);
     } else {
       if (entry.name.endsWith("stl") || entry.name.endsWith("STL")) {
-        addMini(entry);
+        console.log("Adding Mini...");
+        console.log(directoryChain);
+        console.log(entry);
+        addMini(directoryChain, entry);
       }
     }
   }

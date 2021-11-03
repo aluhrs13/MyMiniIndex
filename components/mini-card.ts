@@ -46,15 +46,18 @@ export class MiniCard extends LitElement {
   @state()
   _mini: Promise<Mini>;
 
+  //TODO: Re-style
   render() {
-    console.log("Rendering...");
     this._mini = getMini(this.name);
+
     return until(
       this._mini.then((data) => {
+        console.log(data);
+
         return html`
           <div class="card">
             <div>
-              <a href="#${data.name}">
+              <a href="#${data.fullPath.join("\\")}">
                 <img
                   class="card-thumbnail"
                   width="314"

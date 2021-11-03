@@ -1,8 +1,9 @@
 import { Mini } from "../Mini.js";
-import { getMiniList, getPendingMinis } from "../idbAccessHelpers.js";
+import { getMiniList } from "../idbAccessHelpers.js";
 
 window.onload = function () {
   renderMinis();
+
   window.addEventListener("hashchange", hashHandler, false);
 
   if (window.location.hash.length > 1) {
@@ -16,11 +17,8 @@ async function renderMinis() {
   let minis = await getMiniList();
 
   minis.forEach((mini: Mini) => {
-    console.log(`Gallerying Mini: ${mini.name}`);
-
     var ele = document.createElement("mini-card");
-    ele.name = mini.name;
-
+    ele.name = mini.fullPath.join("\\");
     container.appendChild(ele);
   });
 }
@@ -28,5 +26,6 @@ async function renderMinis() {
 function hashHandler() {
   var ele = document.createElement("view-mini");
   ele.name = decodeURI(window.location.hash.substring(1));
-  document.body.appendChild(ele);
+  document.getElementById("viewer").innerHTML = "";
+  document.getElementById("viewer").appendChild(ele);
 }

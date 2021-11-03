@@ -12,6 +12,7 @@ export class ScanningStatus extends LitElement {
   @property()
   name = "Somebody";
 
+  //TODO: Communicate scanning status
   render() {
     return html`
       <div>

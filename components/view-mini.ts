@@ -1,36 +1,20 @@
+//Lit Imports
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { until } from "lit/directives/until.js";
+
+//Local Imports
 import { getMini } from "../scripts/idbAccessHelpers.js";
 import { Mini } from "../scripts/Mini.js";
-import { until } from "lit/directives/until.js";
+import { getRelativeDirectoy } from "../scripts/settings.js";
 
 @customElement("view-mini")
 export class ViewMini extends LitElement {
   static styles = css`
-    p {
-      color: blue;
-    }
-    .imposter {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      --margin: 1rem;
-      overflow: auto;
-      width: calc(100% - (var(--margin) * 2));
-      max-height: calc(100% - (var(--margin) * 2));
-
-      /* Custom design-y stuff */
-      min-height: 80%;
-      padding: 0.5rem;
-      background-color: white;
-      filter: drop-shadow(0.5rem 0.5rem 1rem #000);
-      border-radius: 0.5rem;
-    }
     .switcher {
       display: flex;
       flex-wrap: wrap;
-      gap: var(1rem);
+      gap: 1rem;
     }
 
     .switcher > * {
@@ -58,8 +42,14 @@ export class ViewMini extends LitElement {
       margin-top: var(--space, 1.5rem);
     }
 
+    .row {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+    }
+
     img {
-      width: 100%;
+      max-width: 628px;
     }
   `;
 
@@ -70,44 +60,55 @@ export class ViewMini extends LitElement {
   _mini: Promise<Mini>;
 
   _close() {
-    document.body.removeChild(this);
+    document.getElementById("viewer").removeChild(this);
+    document.getElementById("viewerbg").hidden = true;
     history.pushState(null, null, "#");
+  }
+
+  _edit() {
+    var ele = document.createElement("edit-mini");
+    ele.name = this.name;
+    document.body.appendChild(ele);
   }
 
   render() {
     this._mini = getMini(this.name);
+    document.getElementById("viewerbg").hidden = false;
 
     return until(
       this._mini.then((data) => {
-        return html`
-          <div class="imposter">
-            <button
-              @click="${this._close}"
-              style="position: absolute; right: .5rem; top: .5rem; width: 2rem; height: 2rem;"
-            >
-              X
-            </button>
-            <h1 id="name">${data.name}</h1>
+        data.fullPath.pop();
+        var path = getRelativeDirectoy() + data.fullPath.join("\\");
 
-            <div class="switcher">
+        return html`
+          <div>
+            <div class="row">
+              <h1 id="name">${data.name}</h1>
+              <button @click="${this._edit}" id="editButton">Edit</button>
+              <button @click="${this._close}">Close</button>
+            </div>
+
+            <div>
+              <img src="${data.base64Image}" />
+            </div>
+            <div class="stack">
               <div>
-                <img src="${data.base64Image}" />
+                <a target="_blank" href="${path}">${path}</a>
               </div>
-              <div class="stack">
-                <div>
-                  <h2>Tags</h2>
-                  ${data.tags.join(", ")}
-                </div>
-                <div>
-                  <h2>URL</h2>
-                  ${data.url}
-                </div>
+              <div>
+                <h2>Tags</h2>
+                ${data.tags.join(", ")}
               </div>
+              <div>
+                <h2>URL</h2>
+                ${data.url}
+              </div>
+              <div></div>
             </div>
           </div>
         `;
       }),
-      html`<span>Loading...</span>`
+      html`<div style="width: 628px; height:100%;">Loading...</div>`
     );
   }
 }

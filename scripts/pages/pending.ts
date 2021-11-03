@@ -19,8 +19,8 @@ async function renderPendingMinis() {
     var container = document.createElement("li");
     var link = document.createElement("a");
     container.classList.add("pending-mini");
-    link.href = `#${mini.name}`;
-    link.innerText = mini.name;
+    link.href = `#${mini.fullPath}`;
+    link.innerHTML = "<b>" + mini.name + "</b> <br>" + mini.fullPath.join("\\");
     container.appendChild(link);
     ele.appendChild(container);
   });

@@ -1,19 +1,16 @@
-// @ts-ignore
-import * as THREE from "https://cdn.skypack.dev/three/";
-// @ts-ignore
-import { STLLoader } from "https://cdn.skypack.dev/three/examples/jsm/loaders/STLLoader.js";
-//@ts-ignore
-import { OrbitControls } from "https://cdn.skypack.dev/three/examples/jsm/controls/OrbitControls.js";
+import * as THREE from "three";
+import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 let container;
-let camera, cameraTarget, scene, renderer;
+let camera, scene, renderer;
 let getImageData = false;
 let imageData = "";
 
 export function renderSTL(blob, parentElement) {
   container = document.createElement("div");
-  container.style.height = "236px";
-  container.style.width = "314px";
+  container.style.height = "472px";
+  container.style.width = "628px";
   parentElement.appendChild(container);
 
   camera = new THREE.PerspectiveCamera(
@@ -51,9 +48,9 @@ export function renderSTL(blob, parentElement) {
 
   // Binary files
   const material = new THREE.MeshPhongMaterial({
-    color: 0xaaaaaa,
+    color: 0x18312d,
     specular: 0x111111,
-    shininess: 200,
+    shininess: 30,
   });
 
   // Colored binary STL
@@ -61,9 +58,9 @@ export function renderSTL(blob, parentElement) {
 
   let meshMaterial = material;
 
-  if (geometry.hasColors) {
+  if (geometry.hasAttribute("color")) {
     meshMaterial = new THREE.MeshPhongMaterial({
-      opacity: geometry.alpha,
+      opacity: 100,
       vertexColors: true,
     });
   }
@@ -79,7 +76,7 @@ export function renderSTL(blob, parentElement) {
   var middle = new THREE.Vector3();
   geometry.computeBoundingBox();
   geometry.boundingBox.getCenter(middle);
-  mesh.geometry.applyMatrix(
+  mesh.geometry.applyMatrix4(
     new THREE.Matrix4().makeTranslation(-middle.x, -middle.y, -middle.z)
   );
   var largestDimension = Math.max(

@@ -20,7 +20,7 @@ export class NavBar extends LitElement {
     }
 
     .head > p {
-      margin-left: 1rem;
+      margin-left: 0.5rem;
     }
 
     .mobile-nav {
@@ -55,6 +55,10 @@ export class NavBar extends LitElement {
       align-items: center;
       height: 100%;
     }
+
+    img {
+      padding: 8px;
+    }
   `;
 
   connectedCallback() {
@@ -73,15 +77,18 @@ export class NavBar extends LitElement {
     this._size = window.innerWidth;
   }
 
+  //TODO: This doesn't work
   _handleResize() {
     this._size = window.innerWidth;
   }
 
+  //TODO: Get image link to work
   render() {
     if (this._size < 450) {
       return html`
         <div class="head">
-          <p>MyMiniIndex</p>
+          <img src="../images/icons/apple-touch-icon-57x57.png" />
+          <a href="/"><p>MyMiniIndex</p></a>
         </div>
         <div class="mobile-nav">
           <a href="/"><br />Home</a>
@@ -93,7 +100,8 @@ export class NavBar extends LitElement {
     } else {
       return html`
         <div class="head">
-          <p>MyMiniIndex</p>
+          <img src="../images/icons/apple-touch-icon-57x57.png" />
+          <a href="/"><p>MyMiniIndex</p></a>
           <div class="cluster" style="position: absolute; right: 2rem;">
             <a href="/"><br />Home</a>
             <a href="/pages/directories.html"><br />Directories</a>
