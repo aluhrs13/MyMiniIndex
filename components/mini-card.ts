@@ -52,8 +52,6 @@ export class MiniCard extends LitElement {
 
     return until(
       this._mini.then((data) => {
-        console.log(data);
-
         return html`
           <div class="card">
             <div>

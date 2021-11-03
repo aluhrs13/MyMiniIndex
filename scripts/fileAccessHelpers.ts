@@ -45,9 +45,6 @@ export async function traverseDirectory(directoryChain, directory) {
       traverseDirectory(JSON.parse(JSON.stringify(directoryChain)), entry);
     } else {
       if (entry.name.endsWith("stl") || entry.name.endsWith("STL")) {
-        console.log("Adding Mini...");
-        console.log(directoryChain);
-        console.log(entry);
         addMini(directoryChain, entry);
       }
     }

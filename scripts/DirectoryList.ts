@@ -10,7 +10,6 @@ export class DirectoryList {
       this.store = createStore("My-Mini-Index", "directory-list");
 
       values(this.store).then((values) => {
-        console.log(values);
         this.directories = values;
         this.refreshDirectoryList();
         return;
@@ -27,7 +26,6 @@ export class DirectoryList {
   }
 
   refreshDirectoryList(): void {
-    console.log("Refreshing directories...");
     let ele = document.getElementById("directoryList");
     ele.innerHTML = "";
 

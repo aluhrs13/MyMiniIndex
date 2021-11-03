@@ -107,6 +107,5 @@ function animate() {
 export function getImage() {
   getImageData = true;
   animate();
-  console.log(imageData);
   return imageData;
 }

@@ -40,9 +40,26 @@ export async function getMini(name: string) {
   }
 }
 
-export async function getMiniList() {
+export async function getMiniList(searchString: string): Promise<Set<Mini>> {
   return values().then((values: Mini[]) => {
-    return values.filter((value) => value.status == Status.Approved);
+    if (searchString) {
+      let arr1 = values
+        .filter((value) => value.status == Status.Approved)
+        .filter((value) => value.tags.includes(searchString));
+
+      let arr2 = values
+        .filter((value) => value.status == Status.Approved)
+        .filter((value) =>
+          value.name
+            .toLowerCase()
+            .split(" ")
+            .includes(searchString.toLowerCase())
+        );
+
+      return new Set(arr1.concat(arr2));
+    } else {
+      return new Set(values.filter((value) => value.status == Status.Approved));
+    }
   });
 }
 
