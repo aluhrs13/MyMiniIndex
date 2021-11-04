@@ -1,5 +1,4 @@
-/dist
-/lib
-/node_modules
-/testModels
-/types
+dist
+node_modules
+types
+build
