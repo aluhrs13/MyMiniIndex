@@ -1,5 +1,5 @@
-import { Mini } from "../Mini.js";
-import { getPendingMinis } from "../idbAccessHelpers.js";
+import { Mini } from "../helpers/Mini";
+import { getPendingMinis } from "../helpers/idbAccessHelpers";
 
 window.onload = function () {
   renderPendingMinis();

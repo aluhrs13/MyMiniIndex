@@ -1,8 +1,8 @@
-import { renderSTL } from "./stl.js";
-import { Mini } from "./Mini.js";
-import { DirectoryList } from "./DirectoryList.js";
-import { addMini } from "./idbAccessHelpers.js";
-import { getExcludeDirectories } from "../scripts/settings.js";
+import { renderSTL } from "./stl";
+import { Mini } from "./Mini";
+import { DirectoryList } from "./DirectoryList";
+import { addMini } from "./idbAccessHelpers";
+import { getExcludeDirectories } from "./settings";
 
 const excludedDirectories = getExcludeDirectories();
 
@@ -19,7 +19,10 @@ export async function showDirectoryDialog(dirs: DirectoryList) {
 export async function scanAllDirectories(dirs: Array<FileSystemHandle>) {
   //TODO: Removed async to get status reporting... not sure it's worth it.
   //TODO: If this stays like this, split permissions and traversal so approvals aren't interspersed randomly.
+  console.log(`Scanning Directories:`)
+  console.log(dirs);
   for (let i = 0; i < dirs.length; i++) {
+    console.log(`Scanning ${dirs[i]}`)
     var directoryChain = new Array();
     directoryChain.push(dirs[i].name);
     await verifyPermission(dirs[i]).then(() =>
@@ -29,9 +32,11 @@ export async function scanAllDirectories(dirs: Array<FileSystemHandle>) {
 }
 
 //TODO: Really need to keep full directory paths for keys
-export async function traverseDirectory(directoryChain, directory) {
+export async function traverseDirectory(directoryChain:Array<string>, directory:FileSystemHandle) {
   var enteredFirstDir = false;
+  //@ts-ignore
   for await (const entry of directory.values()) {
+    //@ts-ignore
     if (entry.kind == "directory") {
       if (excludedDirectories.includes(entry.name)) {
         continue;
@@ -68,7 +73,7 @@ export async function renderFile(entry: Mini, parentElement: HTMLElement) {
   reader.readAsBinaryString(file);
 }
 
-async function verifyPermission(fileHandle) {
+async function verifyPermission(fileHandle:FileSystemHandle) {
   // Check if permission was already granted. If so, return true.
   if ((await fileHandle.queryPermission()) === "granted") {
     return true;

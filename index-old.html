@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyMiniIndex</title>
+
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <script type="module" src="./dist/components/edit-mini.js"></script>
+    <script type="module" src="./dist/components/mini-card.js"></script>
+    <script type="module" src="./dist/components/view-mini.js"></script>
+    <script type="module" src="./dist/components/nav-bar.js"></script>
+  </head>
+  <body>
+    <span id="viewerbg" hidden></span>
+
+    <h1>MyMiniIndex</h1>
+
+    <div class="row">
+      <div style="width: 100%">
+        <div align="center">
+          <input type="text" placeholder="Search" id="searchString" />
+          <button style="font-size: large">Search</button>
+        </div>
+        <div class="grid" id="gallery"></div>
+      </div>
+      <div id="viewer"></div>
+    </div>
+
+    <nav-bar></nav-bar>
+    <script type="module" src="./dist/scripts/pages/index.js"></script>
+  </body>
+</html>

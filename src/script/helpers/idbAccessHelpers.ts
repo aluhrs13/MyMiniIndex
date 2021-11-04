@@ -1,10 +1,11 @@
 import { get, set, values } from "idb-keyval";
-import { Mini, Status } from "./Mini.js";
+import { Mini, Status } from "./Mini";
 
 export async function addMini(
   directoryChain: string[],
   miniHandle: FileSystemHandle
 ) {
+  console.log(miniHandle)
   try {
     var searchPath = JSON.parse(JSON.stringify(directoryChain));
     searchPath.push(miniHandle.name);

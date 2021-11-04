@@ -4,9 +4,9 @@ import { customElement, property, state } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 
 //Local Imports
-import { getMini } from "../scripts/idbAccessHelpers.js";
-import { Mini } from "../scripts/Mini.js";
-import { getRelativeDirectoy } from "../scripts/settings.js";
+import { getMini } from "../helpers/idbAccessHelpers";
+import { Mini } from "../helpers/Mini";
+import { getRelativeDirectoy } from "../helpers/settings";
 
 @customElement("view-mini")
 export class ViewMini extends LitElement {

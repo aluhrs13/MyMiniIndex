@@ -1,8 +1,8 @@
 import {
   showDirectoryDialog,
   scanAllDirectories,
-} from "../fileAccessHelpers.js";
-import { DirectoryList } from "../DirectoryList.js";
+} from "../helpers/fileAccessHelpers";
+import { DirectoryList } from "../helpers/DirectoryList";
 
 var dirs = new DirectoryList();
 

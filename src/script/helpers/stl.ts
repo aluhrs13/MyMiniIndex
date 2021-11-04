@@ -1,13 +1,14 @@
 import * as THREE from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 
-let container;
-let camera, scene, renderer;
+let container:HTMLDivElement;
+let camera:PerspectiveCamera, scene:Scene, renderer:WebGLRenderer;
 let getImageData = false;
 let imageData = "";
 
-export function renderSTL(blob, parentElement) {
+export function renderSTL(blob:string|ArrayBuffer, parentElement:HTMLElement) {
   container = document.createElement("div");
   container.style.height = "472px";
   container.style.width = "628px";

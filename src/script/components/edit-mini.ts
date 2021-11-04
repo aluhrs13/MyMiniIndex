@@ -4,11 +4,11 @@ import { customElement, property, state } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 
 //Local Imports
-import { getImage } from "../scripts/stl.js";
-import { renderFile } from "../scripts/fileAccessHelpers.js";
-import { getMini, updateMini } from "../scripts/idbAccessHelpers.js";
-import { Mini, Status } from "../scripts/Mini.js";
-import { getExcludeTagSuggestions } from "../scripts/settings.js";
+import { getImage } from "../helpers/stl";
+import { renderFile } from "../helpers/fileAccessHelpers";
+import { getMini, updateMini } from "../helpers/idbAccessHelpers";
+import { Mini, Status } from "../helpers/Mini";
+import { getExcludeTagSuggestions } from "../helpers/settings";
 
 @customElement("edit-mini")
 export class EditMini extends LitElement {
@@ -110,7 +110,7 @@ export class EditMini extends LitElement {
         .querySelector("#tagStr")
         //@ts-ignore
         .value.split(",")
-        .map((ele) => {
+        .map((ele:string) => {
           return ele.trim();
         });
 

@@ -1,5 +1,5 @@
-import { Mini } from "../Mini.js";
-import { getMiniList } from "../idbAccessHelpers.js";
+import { Mini } from "../helpers/Mini";
+import { getMiniList } from "../helpers/idbAccessHelpers";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {

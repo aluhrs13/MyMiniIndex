@@ -26,8 +26,8 @@ export class DirectoryList {
   }
 
   refreshDirectoryList(): void {
-    let ele = document.getElementById("directoryList");
-    ele.innerHTML = "";
+    let ele = document.body;//document.getElementById("directoryList");
+    //ele.innerHTML = "";
 
     this.directories.forEach((directory) => {
       let newDiv = document.createElement("div");
