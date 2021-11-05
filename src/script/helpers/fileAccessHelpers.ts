@@ -1,28 +1,18 @@
 import { renderSTL } from "./stl";
 import { Mini } from "./Mini";
-import { DirectoryList } from "./DirectoryList";
 import { addMini } from "./idbAccessHelpers";
 import { getExcludeDirectories } from "./settings";
 
 const excludedDirectories = getExcludeDirectories();
 
-//TODO: Rename to addDirectoryDialog
-export async function showDirectoryDialog(dirs: DirectoryList) {
-  let directory = await window.showDirectoryPicker({
-    startIn: "desktop",
-  });
-
-  dirs.addDir(directory);
-}
-
 //TODO: Report the results of scanning
 export async function scanAllDirectories(dirs: Array<FileSystemHandle>) {
   //TODO: Removed async to get status reporting... not sure it's worth it.
   //TODO: If this stays like this, split permissions and traversal so approvals aren't interspersed randomly.
-  console.log(`Scanning Directories:`)
+  console.log(`[File Access] Scanning Directories:`)
   console.log(dirs);
   for (let i = 0; i < dirs.length; i++) {
-    console.log(`Scanning ${dirs[i]}`)
+    console.log(`[File Access] Scanning ${dirs[i]}`)
     var directoryChain = new Array();
     directoryChain.push(dirs[i].name);
     await verifyPermission(dirs[i]).then(() =>
@@ -58,6 +48,7 @@ export async function traverseDirectory(directoryChain:Array<string>, directory:
 
 export async function renderFile(entry: Mini, parentElement: HTMLElement) {
   await verifyPermission(entry.file);
+  console.log("[File Access] Rendering "+entry.name)
   //@ts-ignore
   let file = await entry.file.getFile();
   var reader = new FileReader();
@@ -74,6 +65,7 @@ export async function renderFile(entry: Mini, parentElement: HTMLElement) {
 }
 
 async function verifyPermission(fileHandle:FileSystemHandle) {
+  console.log("[File Access] Verifying Permissions "+fileHandle.name)
   // Check if permission was already granted. If so, return true.
   if ((await fileHandle.queryPermission()) === "granted") {
     return true;

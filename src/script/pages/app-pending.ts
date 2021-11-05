@@ -8,7 +8,12 @@ import { until } from "lit/directives/until.js";
 @customElement('app-pending')
 export class AppPending extends LitElement {
   static get styles() {
-    return css``;
+    return css`
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }`;
   }
 
   @state()
@@ -18,14 +23,8 @@ export class AppPending extends LitElement {
     super();
   }
 
-  _editMini(e:Event, name:string[]){
-    e.preventDefault();
-    let ele = document.createElement("edit-mini");
-    ele.name = name.join("\\");
-    document.body.appendChild(ele);
-  }
-
   render() {
+    console.log("[Pending] Rendering...")
     this._minis = getPendingMinis();
 
     return until(
@@ -34,13 +33,12 @@ export class AppPending extends LitElement {
         <h1>Pending Minis</h1>
         <ul id="pendingList">
           ${data.map((mini) => {
-            console.log(mini);
             return html`
               <li>
-                <a href="#" @click="${(e) => this._editMini(e, mini.fullPath)}">
+                <a href="/edit/${mini.fullPath.join("/")}">
                 <b>${mini.name}</b>
                 <br/>
-                ${mini.fullPath.join("\\")}
+                ${mini.fullPath.join("/")}
                 </a>
               </li>`
           })}
@@ -50,15 +48,3 @@ export class AppPending extends LitElement {
       html`<span>Loading...</span>`)
   }
 }
-/*
-    var container = document.createElement("li");
-    var link = document.createElement("a");
-    container.classList.add("pending-mini");
-    link.href = `#${mini.fullPath}`;
-    link.innerHTML = "<b>" + mini.name + "</b> <br>" + mini.fullPath.join("\\");
-    container.appendChild(link);
-    ele.appendChild(container);
-*/
-
-
-

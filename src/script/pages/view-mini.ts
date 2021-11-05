@@ -8,6 +8,12 @@ import { getMini } from "../helpers/idbAccessHelpers";
 import { Mini } from "../helpers/Mini";
 import { getRelativeDirectoy } from "../helpers/settings";
 
+import "./edit-mini"
+
+import {
+  RouterLocation,
+} from '@vaadin/router';
+
 @customElement("view-mini")
 export class ViewMini extends LitElement {
   static styles = css`
@@ -52,28 +58,18 @@ export class ViewMini extends LitElement {
       max-width: 628px;
     }
   `;
-
-  @property()
-  name: string;
-
   @state()
+  name: string;
   _mini: Promise<Mini>;
 
-  _close() {
-    document.getElementById("viewer").removeChild(this);
-    document.getElementById("viewerbg").hidden = true;
-    history.pushState(null, null, "#");
-  }
-
-  _edit() {
-    var ele = document.createElement("edit-mini");
-    ele.name = this.name;
-    document.body.appendChild(ele);
+  public onAfterEnter(location: RouterLocation): void {
+    this.name=decodeURI(location.pathname.replace("/view/",""))
+    console.log("[View Mini] Viewing "+this.name)
   }
 
   render() {
+    console.log("[View Mini] Rendering Mini ")
     this._mini = getMini(this.name);
-    document.getElementById("viewerbg").hidden = false;
 
     return until(
       this._mini.then((data) => {
@@ -84,8 +80,7 @@ export class ViewMini extends LitElement {
           <div>
             <div class="row">
               <h1 id="name">${data.name}</h1>
-              <button @click="${this._edit}" id="editButton">Edit</button>
-              <button @click="${this._close}">Close</button>
+            <a href="/edit/${this.name}">Edit</a>
             </div>
 
             <div>

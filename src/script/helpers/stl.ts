@@ -9,6 +9,7 @@ let getImageData = false;
 let imageData = "";
 
 export function renderSTL(blob:string|ArrayBuffer, parentElement:HTMLElement) {
+  console.log("[STL] Rendering STL")
   container = document.createElement("div");
   container.style.height = "472px";
   container.style.width = "628px";

@@ -12,47 +12,100 @@ export class AppHome extends LitElement {
 
   static get styles() {
     return css`
-    `;
+
+#gallery {
+  width: 100%;
+}
+
+#viewer {
+  max-width: 628px;
+  margin: 0px;
+}
+
+#viewerbg {
+  background-color: rgb(202, 227, 223);
+  z-index: -1;
+  width: 642px;
+  max-width: 642px;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+#searchString {
+  width: 80%;
+  font-size: large;
+  margin: 2rem;
+}
+.grid {
+  display: inline-grid;
+  grid-gap: 1rem;
+}
+
+@supports (width: min(318px, 100%)) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(318px, 100%), 1fr));
+  }
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: stretch;
+}
+    `
   }
 
   constructor() {
     super();
+    this._minis = getMiniList();
+    this._searchString = window.location.hash.substring(1);
   }
 
   @state()
   _minis:Promise<Set<Mini>>
+  _searchString:string;
+
+  _search(e?:Event){
+    if(e){
+      e.preventDefault();
+      //@ts-ignore
+      this._searchString = this.renderRoot.querySelector("#searchString").value;
+    }
+    console.log("[Home] Searching...")
+    this._minis = getMiniList(this._searchString);
+    history.pushState(null, null, "#"+this._searchString);
+  }
+
+  firstUpdated(){
+    if(this._searchString){
+      this._search();
+    }
+  }
 
   render() {
-    this._minis = getMiniList();
-
+    console.log("[Home] Rendering...")
     return until(
       this._minis.then((data) => {
         const itemTemplates = [];
         for (const i of data.values()) {
-          itemTemplates.push(html`<mini-card name=${i.fullPath.join("\\")}></mini-card>`);
+          itemTemplates.push(html`<mini-card name=${i.fullPath.join("/")}></mini-card>`);
         }
-        console.log(itemTemplates)
-        return html`;
-        <span id="viewerbg" hidden></span>
-
-        <h1>MyMiniIndex</h1>
-
-        <div class="row">
+        return html`
+          <h1>My Index</h1>
           <div style="width: 100%">
             <div align="center">
-              <input type="text" placeholder="Search" id="searchString" @keyup="${this.firstUpdated}" />
-              <button style="font-size: large">Search</button>
+              <input type="text" placeholder="Search" id="searchString" value="${this._searchString}"} />
+              <button style="font-size: large"  @click="${this._search}">Search</button>
             </div>
             <div class="grid" id="gallery">
             ${itemTemplates}
             </div>
-          </div>
-          <div id="viewer"></div>
-        </div>`
+          </div>`
       })
       ,html`<span>Loading...</span>`);
-
-    return ;
   }
 }
 

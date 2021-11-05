@@ -5,25 +5,27 @@ export async function addMini(
   directoryChain: string[],
   miniHandle: FileSystemHandle
 ) {
+  console.log("[IDB] Adding Mini...")
   console.log(miniHandle)
   try {
     var searchPath = JSON.parse(JSON.stringify(directoryChain));
-    searchPath.push(miniHandle.name);
-    let mini = await get(searchPath.join("\\"));
+    searchPath.push(miniHandle.name.replaceAll(".stl", ""));
+    let mini = await get(searchPath.join("/"));
 
     if (mini) {
       return;
     }
 
-    await set(searchPath.join("\\"), new Mini(directoryChain, miniHandle));
+    await set(searchPath.join("/"), new Mini(directoryChain, miniHandle));
   } catch (error) {
     console.log(error.message);
   }
 }
 
 export async function updateMini(mini: Mini) {
+  console.log("[IDB] Updating Mini...")
   try {
-    await set(mini.fullPath.join("\\"), mini);
+    await set(mini.fullPath.join("/"), mini);
   } catch (error) {
     console.error(error);
   }
@@ -31,6 +33,7 @@ export async function updateMini(mini: Mini) {
 
 export async function getMini(name: string) {
   try {
+    console.log("[IDB] Getting Mini "+name)
     let mini = await get(name);
 
     if (mini) {
@@ -39,12 +42,12 @@ export async function getMini(name: string) {
   } catch (error) {
     console.log(error.message);
   }
+  console.error("[IDB] Mini not found")
 }
 
 export async function getMiniList(searchString?: string): Promise<Set<Mini>> {
-  console.log("Getting List:");
+  console.log("[IDB] Listing Minis");
   return values().then((values: Mini[]) => {
-    console.log(values)
     if (searchString) {
       let arr1 = values
         .filter((value) => value.status == Status.Approved)
@@ -66,6 +69,7 @@ export async function getMiniList(searchString?: string): Promise<Set<Mini>> {
 }
 
 export async function getPendingMinis() {
+  console.log("[IDB] Listing Pending Minis");
   return values().then((values) => {
     return values.filter((value) => value.status == Status.Pending);
   });

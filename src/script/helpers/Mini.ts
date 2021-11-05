@@ -9,7 +9,7 @@ export class Mini {
 
   constructor(directoryPath: string[], file: FileSystemHandle) {
     this.fullPath = JSON.parse(JSON.stringify(directoryPath));
-    this.fullPath.push(file.name);
+    this.fullPath.push(file.name.replaceAll(".stl", ""));
 
     this.name = file.name.replaceAll("_", " ").replaceAll(".stl", "");
     this.file = file;

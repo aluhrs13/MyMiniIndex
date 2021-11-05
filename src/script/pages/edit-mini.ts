@@ -10,6 +10,10 @@ import { getMini, updateMini } from "../helpers/idbAccessHelpers";
 import { Mini, Status } from "../helpers/Mini";
 import { getExcludeTagSuggestions } from "../helpers/settings";
 
+import {
+  RouterLocation,
+} from '@vaadin/router';
+
 @customElement("edit-mini")
 export class EditMini extends LitElement {
   static styles = css`
@@ -20,23 +24,7 @@ export class EditMini extends LitElement {
       gap: 1rem;
       align-items: stretch;
     }
-    .imposter {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      --margin: 1rem;
-      overflow: auto;
-      width: calc(100% - (var(--margin) * 2));
-      max-height: calc(100% - (var(--margin) * 2));
 
-      /* Custom design-y stuff */
-      min-height: 80%;
-      padding: 0.5rem;
-      background-color: white;
-      filter: drop-shadow(0.5rem 0.5rem 1rem #000);
-      border-radius: 0.5rem;
-    }
 
     .switcher {
       display: flex;
@@ -120,7 +108,7 @@ export class EditMini extends LitElement {
       data.name = this.renderRoot.querySelector("#nameStr").value;
 
       updateMini(data);
-      this._close();
+      window.location.replace("/view/"+data.fullPath.join("/"))
     });
   }
 
@@ -129,7 +117,7 @@ export class EditMini extends LitElement {
     this._mini.then((data) => {
       data.status = Status.Rejected;
       updateMini(data);
-      this._close();
+      window.location.replace("/pending");
     });
   }
 
@@ -140,9 +128,9 @@ export class EditMini extends LitElement {
     });
   }
 
-  _close() {
-    document.body.removeChild(this);
-    history.pushState(null, null, "#");
+  public onAfterEnter(location: RouterLocation): void {
+    this.name=decodeURI(location.pathname.replace("/edit/",""))
+    console.log("[Edit Mini] Editing "+this.name)
   }
 
   render() {
@@ -165,7 +153,6 @@ export class EditMini extends LitElement {
         }
 
         return html`
-          <div class="imposter">
             <button @click="${this._close}" id="closeButton">X</button>
 
             <h1>${data.name}</h1>
@@ -204,7 +191,6 @@ export class EditMini extends LitElement {
                 </div>
               </div>
             </div>
-          </div>
         `;
       }),
       html`<span>Loading...</span>`

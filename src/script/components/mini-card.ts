@@ -45,6 +45,11 @@ export class MiniCard extends LitElement {
 
   @state()
   _mini: Promise<Mini>;
+  event: CustomEvent;
+
+  constructor(){
+    super();
+  }
 
   //TODO: Re-style
   render() {
@@ -55,7 +60,7 @@ export class MiniCard extends LitElement {
         return html`
           <div class="card">
             <div>
-              <a href="#${data.fullPath.join("\\")}">
+              <a href="/view/${this.name}">
                 <img
                   class="card-thumbnail"
                   width="314"

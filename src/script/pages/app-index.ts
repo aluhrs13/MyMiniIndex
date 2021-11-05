@@ -2,7 +2,6 @@ import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import './app-home';
-import '../components/edit-mini'
 
 import { Router } from '@vaadin/router';
 
@@ -81,6 +80,17 @@ export class AppIndex extends LitElement {
             action: async () => {
               await import('./app-pending.js');
             },
+          },{
+            path: '/view/(.*)',
+            component: 'view-mini',
+            action: async () => {
+              await import('./view-mini.js');
+            },{
+              path: '/edit/(.*)',
+              component: 'edit-mini',
+              action: async () => {
+                await import('./edit-mini.js');
+              },
           },/*
           {
             path: '/share',
