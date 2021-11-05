@@ -1,68 +1,17 @@
 import { LitElement, css, html } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
+import { Mini } from "../helpers/Mini";
+import { getMiniList } from "../helpers/idbAccessHelpers";
+import { until } from "lit/directives/until.js";
 
 // For more info on the @pwabuilder/pwainstall component click here https://github.com/pwa-builder/pwa-install
 import '@pwabuilder/pwainstall';
 
 @customElement('app-home')
 export class AppHome extends LitElement {
-  // For more information on using properties and state in lit
-  // check out this link https://lit.dev/docs/components/properties/
-  @property() message = 'Welcome!';
 
   static get styles() {
     return css`
-      #welcomeBar {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-      }
-
-      #welcomeBar fast-card {
-        margin-bottom: 12px;
-      }
-
-      #welcomeCard,
-      #infoCard {
-        padding: 18px;
-        padding-top: 0px;
-      }
-
-      pwa-install {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-      }
-
-      button {
-        cursor: pointer;
-      }
-
-      @media (min-width: 1200px) {
-        #welcomeCard,
-        #infoCard {
-          width: 40%;
-        }
-      }
-
-      @media (screen-spanning: single-fold-vertical) {
-        #welcomeBar {
-          flex-direction: row;
-          align-items: flex-start;
-          justify-content: space-between;
-        }
-
-        #welcomeCard {
-          margin-right: 64px;
-        }
-      }
-
-      @media(prefers-color-scheme: light) {
-        fast-card {
-          --background-color: white;
-        }
-      }
     `;
   }
 
@@ -70,99 +19,81 @@ export class AppHome extends LitElement {
     super();
   }
 
-  async firstUpdated() {
-    // this method is a lifecycle even in lit
-    // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
-    console.log('This is your home page');
-  }
-
-  share() {
-    if ((navigator as any).share) {
-      (navigator as any).share({
-        title: 'PWABuilder pwa-starter',
-        text: 'Check out the PWABuilder pwa-starter!',
-        url: 'https://github.com/pwa-builder/pwa-starter',
-      });
-    }
-  }
+  @state()
+  _minis:Promise<Set<Mini>>
 
   render() {
-    return html`
-      <div>
-        <div id="welcomeBar">
-          <fast-card id="welcomeCard">
-            <h2>${this.message}</h2>
+    this._minis = getMiniList();
 
-            <p>
-              For more information on the PWABuilder pwa-starter, check out the
-              <fast-anchor
-                href="https://github.com/pwa-builder/pwa-starter/blob/master/README.md"
-                appearance="hypertext"
-                >README</fast-anchor
-              >.
-            </p>
+    return until(
+      this._minis.then((data) => {
+        const itemTemplates = [];
+        for (const i of data.values()) {
+          itemTemplates.push(html`<mini-card name=${i.fullPath.join("\\")}></mini-card>`);
+        }
+        console.log(itemTemplates)
+        return html`;
+        <span id="viewerbg" hidden></span>
 
-            <p>
-              Welcome to the
-              <fast-anchor href="https://pwabuilder.com" appearance="hypertext"
-                >PWABuilder</fast-anchor
-              >
-              pwa-starter! Be sure to head back to
-              <fast-anchor href="https://pwabuilder.com" appearance="hypertext"
-                >PWABuilder</fast-anchor
-              >
-              when you are ready to ship this PWA to the Microsoft, Google Play
-              and Samsung Galaxy stores!
-            </p>
+        <h1>MyMiniIndex</h1>
 
-            ${'share' in navigator
-              ? html`<fast-button appearance="primary" @click="${this.share}"
-                  >Share this Starter!</fast-button
-                >`
-              : null}
-          </fast-card>
+        <div class="row">
+          <div style="width: 100%">
+            <div align="center">
+              <input type="text" placeholder="Search" id="searchString" @keyup="${this.firstUpdated}" />
+              <button style="font-size: large">Search</button>
+            </div>
+            <div class="grid" id="gallery">
+            ${itemTemplates}
+            </div>
+          </div>
+          <div id="viewer"></div>
+        </div>`
+      })
+      ,html`<span>Loading...</span>`);
 
-          <fast-card id="infoCard">
-            <h2>Technology Used</h2>
-
-            <ul>
-              <li>
-                <fast-anchor
-                  href="https://www.typescriptlang.org/"
-                  appearance="hypertext"
-                  >TypeScript</fast-anchor
-                >
-              </li>
-
-              <li>
-                <fast-anchor
-                  href="https://lit.dev"
-                  appearance="hypertext"
-                  >lit</fast-anchor
-                >
-              </li>
-
-              <li>
-                <fast-anchor
-                  href="https://www.fast.design/docs/components/getting-started"
-                  appearance="hypertext"
-                  >FAST Components</fast-anchor
-                >
-              </li>
-
-              <li>
-                <fast-anchor
-                  href="https://vaadin.github.io/vaadin-router/vaadin-router/demo/#vaadin-router-getting-started-demos"
-                  appearance="hypertext"
-                  >Vaadin Router</fast-anchor
-                >
-              </li>
-            </ul>
-          </fast-card>
-        </div>
-
-        <pwa-install>Install PWA Starter</pwa-install>
-      </div>
-    `;
+    return ;
   }
 }
+
+/*
+
+  updated(changedProperties) {
+    //@ts-ignore
+    let minis = await getMiniList(this.renderRoot.querySelector("#searchString").value);
+    console.log(minis)
+
+    //@ts-ignore
+    var container = this.renderRoot.querySelector("#gallery");
+    container.innerHTML = "";
+
+    minis.forEach((mini: Mini) => {
+      var ele = document.createElement("mini-card");
+      ele.name = mini.fullPath.join("\\");
+      container.appendChild(ele);
+    });
+  }
+
+window.onload = function () {
+  search();
+
+  window.addEventListener("hashchange", hashHandler, false);
+  document.getElementById("searchString").addEventListener("keyup", search);
+
+  if (window.location.hash.length > 1) {
+    hashHandler();
+  }
+};
+
+
+
+function hashHandler() {
+  var ele = document.createElement("view-mini");
+  ele.name = decodeURI(window.location.hash.substring(1));
+  document.getElementById("viewer").innerHTML = "";
+  document.getElementById("viewer").appendChild(ele);
+}
+
+
+
+*/

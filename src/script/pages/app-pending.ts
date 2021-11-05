@@ -17,19 +17,48 @@ export class AppPending extends LitElement {
   constructor() {
     super();
   }
+
+  _editMini(e:Event, name:string[]){
+    e.preventDefault();
+    let ele = document.createElement("edit-mini");
+    ele.name = name.join("\\");
+    document.body.appendChild(ele);
+  }
+
   render() {
     this._minis = getPendingMinis();
-    console.log("RENDERING")
 
     return until(
       this._minis.then((data) => {
-        html`
+        return html`
         <h1>Pending Minis</h1>
-        <ul id="pendingList">${data.map((data2)=>{console.log(data2); return html`<li>${data2}</li>`})}</ul>
+        <ul id="pendingList">
+          ${data.map((mini) => {
+            console.log(mini);
+            return html`
+              <li>
+                <a href="#" @click="${(e) => this._editMini(e, mini.fullPath)}">
+                <b>${mini.name}</b>
+                <br/>
+                ${mini.fullPath.join("\\")}
+                </a>
+              </li>`
+          })}
+        </ul>
       `;
       }),
       html`<span>Loading...</span>`)
   }
 }
+/*
+    var container = document.createElement("li");
+    var link = document.createElement("a");
+    container.classList.add("pending-mini");
+    link.href = `#${mini.fullPath}`;
+    link.innerHTML = "<b>" + mini.name + "</b> <br>" + mini.fullPath.join("\\");
+    container.appendChild(link);
+    ele.appendChild(container);
+*/
+
 
 

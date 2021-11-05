@@ -87,26 +87,26 @@ export class NavBar extends LitElement {
     if (this._size < 450) {
       return html`
         <div class="head">
-          <img src="../images/icons/apple-touch-icon-57x57.png" />
+          <img src="../assets/icons/apple-touch-icon-57x57.png" />
           <a href="/"><p>MyMiniIndex</p></a>
         </div>
         <div class="mobile-nav">
           <a href="/"><br />Home</a>
-          <a href="/pages/directories.html"><br />Directories</a>
-          <a href="/pages/pending.html"><br />Pending</a>
-          <a href="/pages/share.html"><br />Share</a>
+          <a href="/directories"><br />Directories</a>
+          <a href="/pending"><br />Pending</a>
+          <a href="/share"><br />Share</a>
         </div>
       `;
     } else {
       return html`
         <div class="head">
-          <img src="../images/icons/apple-touch-icon-57x57.png" />
+          <img src="../assets/icons/apple-touch-icon-57x57.png" />
           <a href="/"><p>MyMiniIndex</p></a>
           <div class="cluster" style="position: absolute; right: 2rem;">
             <a href="/"><br />Home</a>
-            <a href="/pages/directories.html"><br />Directories</a>
-            <a href="/pages/pending.html"><br />Pending</a>
-            <a href="/pages/share.html"><br />Share</a>
+            <a href="/directories"><br />Directories</a>
+            <a href="/pending"><br />Pending</a>
+            <a href="/share"><br />Share</a>
           </div>
         </div>
       `;

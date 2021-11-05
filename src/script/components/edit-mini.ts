@@ -146,7 +146,7 @@ export class EditMini extends LitElement {
   }
 
   render() {
-    this._mini = getMini(this.name.split(",").join("\\"));
+    this._mini = getMini(this.name);
 
     return until(
       this._mini.then((data) => {

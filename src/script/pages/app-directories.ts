@@ -6,8 +6,8 @@ import {
 } from "../helpers/fileAccessHelpers";
 import { DirectoryList } from "../helpers/DirectoryList";
 
-@customElement('app-about')
-export class AppAbout extends LitElement {
+@customElement('app-directories')
+export class AppDirectories extends LitElement {
   static get styles() {
     return css``;
   }

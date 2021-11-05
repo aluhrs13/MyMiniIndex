@@ -41,8 +41,10 @@ export async function getMini(name: string) {
   }
 }
 
-export async function getMiniList(searchString: string): Promise<Set<Mini>> {
+export async function getMiniList(searchString?: string): Promise<Set<Mini>> {
+  console.log("Getting List:");
   return values().then((values: Mini[]) => {
+    console.log(values)
     if (searchString) {
       let arr1 = values
         .filter((value) => value.status == Status.Approved)
@@ -56,7 +58,6 @@ export async function getMiniList(searchString: string): Promise<Set<Mini>> {
             .split(" ")
             .includes(searchString.toLowerCase())
         );
-
       return new Set(arr1.concat(arr2));
     } else {
       return new Set(values.filter((value) => value.status == Status.Approved));

@@ -2,10 +2,12 @@ import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 import './app-home';
+import '../components/edit-mini'
 
 import { Router } from '@vaadin/router';
 
-import '../components/header';
+import '../components/nav-bar';
+import '../components/mini-card';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {
@@ -67,10 +69,10 @@ export class AppIndex extends LitElement {
         children: [
           { path: '/', component: 'app-home' },
           {
-            path: '/about',
-            component: 'app-about',
+            path: '/directories',
+            component: 'app-directories',
             action: async () => {
-              await import('./app-about.js');
+              await import('./app-directories.js');
             },
           },
           {
@@ -79,7 +81,14 @@ export class AppIndex extends LitElement {
             action: async () => {
               await import('./app-pending.js');
             },
-          },
+          },/*
+          {
+            path: '/share',
+            component: 'app-share',
+            action: async () => {
+              await import('./app-share.js');
+            },
+          },*/
         ],
       } as any,
     ]);
@@ -88,7 +97,7 @@ export class AppIndex extends LitElement {
   render() {
     return html`
       <div>
-        <app-header></app-header>
+        <nav-bar></nav-bar>
 
         <main>
           <div id="routerOutlet"></div>
