@@ -21,7 +21,7 @@ export class AppDirectories extends LitElement {
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
-        align-items: stretch;
+        align-items: center;
       }
       button {
         height: 100%;
