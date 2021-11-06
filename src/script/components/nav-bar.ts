@@ -94,7 +94,7 @@ export class NavBar extends LitElement {
           <a href="/"><br />Home</a>
           <a href="/directories"><br />Directories</a>
           <a href="/pending"><br />Pending</a>
-          <a href="/share"><br />Share</a>
+          <!--<a href="/share"><br />Share</a>-->
         </div>
       `;
     } else {
@@ -106,7 +106,7 @@ export class NavBar extends LitElement {
             <a href="/"><br />Home</a>
             <a href="/directories"><br />Directories</a>
             <a href="/pending"><br />Pending</a>
-            <a href="/share"><br />Share</a>
+            <!--<a href="/share"><br />Share</a>-->
           </div>
         </div>
       `;

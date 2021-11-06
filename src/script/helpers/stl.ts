@@ -8,7 +8,7 @@ let camera:PerspectiveCamera, scene:Scene, renderer:WebGLRenderer;
 let getImageData = false;
 let imageData = "";
 
-export function renderSTL(blob:string|ArrayBuffer, parentElement:HTMLElement) {
+export async function renderSTL(blob:string|ArrayBuffer, parentElement:HTMLElement) {
   console.log("[STL] Rendering STL")
   container = document.createElement("div");
   container.style.height = "472px";
@@ -108,6 +108,7 @@ function animate() {
 
 export function getImage() {
   getImageData = true;
+  performance.mark("Tried to get image");
   animate();
   return imageData;
 }

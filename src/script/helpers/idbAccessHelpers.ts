@@ -1,4 +1,4 @@
-import { get, set, values } from "idb-keyval";
+import { get, set, values, createStore } from "idb-keyval";
 import { Mini, Status } from "./Mini";
 
 export async function addMini(
@@ -73,4 +73,11 @@ export async function getPendingMinis() {
   return values().then((values) => {
     return values.filter((value) => value.status == Status.Pending);
   });
+}
+
+export async function getDirectoryHandle(dir:string){
+  console.log("[IDB] Getting directory handle");
+  console.log(dir)
+
+  return await get(dir, createStore("My-Mini-Index", "directory-list"));
 }

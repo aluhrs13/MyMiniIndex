@@ -1,6 +1,6 @@
 import { renderSTL } from "./stl";
 import { Mini } from "./Mini";
-import { addMini } from "./idbAccessHelpers";
+import { addMini, getDirectoryHandle} from "./idbAccessHelpers";
 import { getExcludeDirectories } from "./settings";
 
 const excludedDirectories = getExcludeDirectories();
@@ -47,31 +47,36 @@ export async function traverseDirectory(directoryChain:Array<string>, directory:
 }
 
 export async function renderFile(entry: Mini, parentElement: HTMLElement) {
-  await verifyPermission(entry.file);
+  let dirHandle = await getDirectoryHandle(entry.fullPath[0]);
+  await verifyPermission(dirHandle);
   console.log("[File Access] Rendering "+entry.name)
   //@ts-ignore
   let file = await entry.file.getFile();
   var reader = new FileReader();
 
-  reader.onload = function (e) {
+  reader.onload = async function (e) {
     //https://github.com/fenrus75/FenrusCNCtools/blob/master/javascript/stl2png.js
     if (e.target.readyState == FileReader.DONE) {
-      renderSTL(e.target.result, parentElement);
+      await renderSTL(e.target.result, parentElement);
     }
   };
 
   //@ts-ignore
-  reader.readAsBinaryString(file);
+  await reader.readAsBinaryString(file);
 }
 
-async function verifyPermission(fileHandle:FileSystemHandle) {
+export async function verifyPermission(fileHandle:FileSystemHandle) {
+  const opts = {};
+  //@ts-ignore
+  opts.mode = 'readwrite';
+
   console.log("[File Access] Verifying Permissions "+fileHandle.name)
   // Check if permission was already granted. If so, return true.
-  if ((await fileHandle.queryPermission()) === "granted") {
+  if ((await fileHandle.queryPermission(opts)) === "granted") {
     return true;
   }
   // Request permission. If the user grants permission, return true.
-  if ((await fileHandle.requestPermission()) === "granted") {
+  if ((await fileHandle.requestPermission(opts)) === "granted") {
     return true;
   }
   // The user didn't grant permission, so return false.

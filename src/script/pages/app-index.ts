@@ -80,12 +80,15 @@ export class AppIndex extends LitElement {
             action: async () => {
               await import('./app-pending.js');
             },
-          },{
+          },
+          {
             path: '/view/(.*)',
             component: 'view-mini',
             action: async () => {
               await import('./view-mini.js');
-            },{
+            },
+          },
+          {
               path: '/edit/(.*)',
               component: 'edit-mini',
               action: async () => {

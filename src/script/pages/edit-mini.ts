@@ -5,10 +5,12 @@ import { until } from "lit/directives/until.js";
 
 //Local Imports
 import { getImage } from "../helpers/stl";
-import { renderFile } from "../helpers/fileAccessHelpers";
-import { getMini, updateMini } from "../helpers/idbAccessHelpers";
+import { renderFile, verifyPermission } from "../helpers/fileAccessHelpers";
+import { getMini, updateMini, getDirectoryHandle } from "../helpers/idbAccessHelpers";
 import { Mini, Status } from "../helpers/Mini";
 import { getExcludeTagSuggestions } from "../helpers/settings";
+
+import {Router} from '@vaadin/router';
 
 import {
   RouterLocation,
@@ -84,7 +86,7 @@ export class EditMini extends LitElement {
   _mini: Promise<Mini>;
 
   //Saves the current Mini
-  _saveMini() {
+  _saveMini(goToView:boolean) {
     this._mini.then((data) => {
       data.status = Status.Approved;
 
@@ -108,7 +110,16 @@ export class EditMini extends LitElement {
       data.name = this.renderRoot.querySelector("#nameStr").value;
 
       updateMini(data);
-      window.location.replace("/view/"+data.fullPath.join("/"))
+
+      if(goToView){
+        Router.go({
+          pathname: "/view/"+encodeURI(data.fullPath.join("/"))
+        });
+      }else{
+        Router.go({
+          pathname: "/pending"
+        });
+      }
     });
   }
 
@@ -122,10 +133,13 @@ export class EditMini extends LitElement {
   }
 
   _loadModel() {
-    this.renderRoot.querySelector("#loadModelButton").remove();
-    this._mini.then((data) => {
-      renderFile(data, this.renderRoot.querySelector("#model"));
-    });
+    try{
+      this._mini.then((data) => {
+        renderFile(data, this.renderRoot.querySelector("#model"));
+        this.renderRoot.querySelector("#loadModelButton").remove();
+      });
+    }catch(e){
+    }
   }
 
   public onAfterEnter(location: RouterLocation): void {
@@ -133,11 +147,17 @@ export class EditMini extends LitElement {
     console.log("[Edit Mini] Editing "+this.name)
   }
 
+  async _handler(){
+    await this.updateComplete
+    this._loadModel();
+  }
+
   render() {
     this._mini = getMini(this.name);
 
     return until(
       this._mini.then((data) => {
+        this._handler();
         var tagData = "";
         if (data.tags.length > 0) {
           tagData = data.tags.join(", ");
@@ -153,8 +173,6 @@ export class EditMini extends LitElement {
         }
 
         return html`
-            <button @click="${this._close}" id="closeButton">X</button>
-
             <h1>${data.name}</h1>
             <div class="switcher">
               <div align="center">
@@ -184,7 +202,8 @@ export class EditMini extends LitElement {
                   <input type="text" id="url" value="${data.url}" />
                 </div>
                 <div class="row">
-                  <button @click="${this._saveMini}">Save</button>
+                  <button @click="${() =>{this._saveMini(true)}}">Save</button>
+                  <button @click="${() =>{this._saveMini(false)}}">Save and Next</button>
                   <button @click="${this._removeMini}">
                     Remove from Index
                   </button>
