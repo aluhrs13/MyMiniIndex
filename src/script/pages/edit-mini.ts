@@ -4,11 +4,19 @@ import { customElement, property, state } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 
 //Local Imports
-import { getImage } from "../scripts/stl.js";
-import { renderFile } from "../scripts/fileAccessHelpers.js";
-import { getMini, updateMini } from "../scripts/idbAccessHelpers.js";
-import { Mini, Status } from "../scripts/Mini.js";
-import { getExcludeTagSuggestions } from "../scripts/settings.js";
+import { getImage } from "../helpers/stl";
+import { renderFile, verifyPermission } from "../helpers/fileAccessHelpers";
+import {
+  getMini,
+  updateMini,
+  getDirectoryHandle,
+} from "../helpers/idbAccessHelpers";
+import { Mini, Status } from "../helpers/Mini";
+import { getExcludeTagSuggestions } from "../helpers/settings";
+
+import { Router } from "@vaadin/router";
+
+import { RouterLocation } from "@vaadin/router";
 
 @customElement("edit-mini")
 export class EditMini extends LitElement {
@@ -19,23 +27,6 @@ export class EditMini extends LitElement {
       flex-direction: row;
       gap: 1rem;
       align-items: stretch;
-    }
-    .imposter {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      --margin: 1rem;
-      overflow: auto;
-      width: calc(100% - (var(--margin) * 2));
-      max-height: calc(100% - (var(--margin) * 2));
-
-      /* Custom design-y stuff */
-      min-height: 80%;
-      padding: 0.5rem;
-      background-color: white;
-      filter: drop-shadow(0.5rem 0.5rem 1rem #000);
-      border-radius: 0.5rem;
     }
 
     .switcher {
@@ -96,7 +87,7 @@ export class EditMini extends LitElement {
   _mini: Promise<Mini>;
 
   //Saves the current Mini
-  _saveMini() {
+  _saveMini(goToView: boolean) {
     this._mini.then((data) => {
       data.status = Status.Approved;
 
@@ -110,7 +101,7 @@ export class EditMini extends LitElement {
         .querySelector("#tagStr")
         //@ts-ignore
         .value.split(",")
-        .map((ele) => {
+        .map((ele: string) => {
           return ele.trim();
         });
 
@@ -120,7 +111,16 @@ export class EditMini extends LitElement {
       data.name = this.renderRoot.querySelector("#nameStr").value;
 
       updateMini(data);
-      this._close();
+
+      if (goToView) {
+        Router.go({
+          pathname: "/view/" + encodeURI(data.fullPath.join("/")),
+        });
+      } else {
+        Router.go({
+          pathname: "/pending",
+        });
+      }
     });
   }
 
@@ -129,27 +129,35 @@ export class EditMini extends LitElement {
     this._mini.then((data) => {
       data.status = Status.Rejected;
       updateMini(data);
-      this._close();
+      window.location.replace("/pending");
     });
   }
 
   _loadModel() {
-    this.renderRoot.querySelector("#loadModelButton").remove();
-    this._mini.then((data) => {
-      renderFile(data, this.renderRoot.querySelector("#model"));
-    });
+    try {
+      this._mini.then((data) => {
+        renderFile(data, this.renderRoot.querySelector("#model"));
+        this.renderRoot.querySelector("#loadModelButton").remove();
+      });
+    } catch (e) {}
   }
 
-  _close() {
-    document.body.removeChild(this);
-    history.pushState(null, null, "#");
+  public onAfterEnter(location: RouterLocation): void {
+    this.name = decodeURI(location.pathname.replace("/edit/", ""));
+    console.log("[Edit Mini] Editing " + this.name);
+  }
+
+  async _handler() {
+    await this.updateComplete;
+    this._loadModel();
   }
 
   render() {
-    this._mini = getMini(this.name.split(",").join("\\"));
+    this._mini = getMini(this.name);
 
     return until(
       this._mini.then((data) => {
+        this._handler();
         var tagData = "";
         if (data.tags.length > 0) {
           tagData = data.tags.join(", ");
@@ -165,43 +173,52 @@ export class EditMini extends LitElement {
         }
 
         return html`
-          <div class="imposter">
-            <button @click="${this._close}" id="closeButton">X</button>
-
-            <h1>${data.name}</h1>
-            <div class="switcher">
-              <div align="center">
-                <div
-                  id="model"
-                  style="width: 628px; height: 472px; border-style: solid"
-                ></div>
+          <mobile-header>
+            <h1 slot="text">${data.name}</h1>
+          </mobile-header>
+          <div class="switcher">
+            <div align="center">
+              <div
+                id="model"
+                style="width: 628px; height: 472px; border-style: solid"
+              ></div>
+              <br />
+              <button @click="${this._loadModel}" id="loadModelButton">
+                Load Model...
+              </button>
+            </div>
+            <div class="stack">
+              <div>
+                <label>Name</label>
                 <br />
-                <button @click="${this._loadModel}" id="loadModelButton">
-                  Load Model...
-                </button>
+                <input type="text" id="nameStr" value="${data.name}" />
               </div>
-              <div class="stack">
-                <div>
-                  <label>Name</label>
-                  <br />
-                  <input type="text" id="nameStr" value="${data.name}" />
-                </div>
-                <div>
-                  <label>Tags</label>
-                  <br />
-                  <textarea id="tagStr">${tagData}</textarea>
-                </div>
-                <div>
-                  <label>URL</label>
-                  <br />
-                  <input type="text" id="url" value="${data.url}" />
-                </div>
-                <div class="row">
-                  <button @click="${this._saveMini}">Save</button>
-                  <button @click="${this._removeMini}">
-                    Remove from Index
-                  </button>
-                </div>
+              <div>
+                <label>Tags</label>
+                <br />
+                <textarea id="tagStr">${tagData}</textarea>
+              </div>
+              <div>
+                <label>URL</label>
+                <br />
+                <input type="text" id="url" value="${data.url}" />
+              </div>
+              <div class="row">
+                <button
+                  @click="${() => {
+                    this._saveMini(true);
+                  }}"
+                >
+                  Save
+                </button>
+                <button
+                  @click="${() => {
+                    this._saveMini(false);
+                  }}"
+                >
+                  Save and Next
+                </button>
+                <button @click="${this._removeMini}">Remove from Index</button>
               </div>
             </div>
           </div>

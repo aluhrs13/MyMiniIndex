@@ -1,0 +1,41 @@
+:root {
+  --app-primary-color: #18312d;
+  --app-secondary-color: rgb(202, 227, 223);
+  --edge-offset: 0.5rem;
+  --s1: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+
+.with-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+}
+
+.with-sidebar > :first-child {
+  flex-grow: 1;
+}
+
+.with-sidebar > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: 50%;
+}
+
+.pending-mini {
+  padding: 1rem;
+}
+
+body {
+  margin-top: 66px;
+  margin-bottom: 86px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: stretch;
+}

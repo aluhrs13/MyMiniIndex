@@ -3,12 +3,12 @@
   "name": "MyMiniIndex: Organize your STL files to easily find the perfect 3d printable file",
   "icons": [
     {
-      "src": "/images/icons/favicon-196x196.png",
+      "src": "/assets/icons/favicon-196x196.png",
       "type": "image/png",
       "sizes": "196x196"
     },
     {
-      "src": "/images/icons/apple-touch-icon-60x60.png",
+      "src": "/assets/icons/apple-touch-icon-60x60.png",
       "type": "image/png",
       "sizes": "60x60"
     }

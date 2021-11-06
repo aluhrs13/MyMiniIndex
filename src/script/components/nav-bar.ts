@@ -36,24 +36,32 @@ export class NavBar extends LitElement {
       justify-content: space-around;
     }
 
-    a {
+    .icon {
       display: inline-block;
       color: white;
       text-align: center;
       height: 100%;
+      width: 25%;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
     }
 
     .mobile-nav a {
       width: 100%;
+      vertical-align: bottom;
     }
 
     .cluster {
       display: flex;
       flex-wrap: wrap;
       gap: var(--space, 1rem);
-      justify-content: flex-start;
+      justify-content: flex-end;
       align-items: center;
       height: 100%;
+      width: 33%;
     }
 
     img {
@@ -86,27 +94,37 @@ export class NavBar extends LitElement {
   render() {
     if (this._size < 450) {
       return html`
-        <div class="head">
-          <img src="../images/icons/apple-touch-icon-57x57.png" />
-          <a href="/"><p>MyMiniIndex</p></a>
-        </div>
         <div class="mobile-nav">
-          <a href="/"><br />Home</a>
-          <a href="/pages/directories.html"><br />Directories</a>
-          <a href="/pages/pending.html"><br />Pending</a>
-          <a href="/pages/share.html"><br />Share</a>
+          <a href="/" class="icon"
+            ><br /><ion-icon name="home-outline"></ion-icon
+          ></a>
+          <a href="/directories" class="icon"
+            ><br /><ion-icon name="folder-open-outline"></ion-icon
+          ></a>
+          <a href="/pending" class="icon"
+            ><br /><ion-icon name="enter"></ion-icon
+          ></a>
+          <!--<a href="/share"><br />Share</a>-->
         </div>
       `;
     } else {
       return html`
         <div class="head">
-          <img src="../images/icons/apple-touch-icon-57x57.png" />
+          <img src="../assets/icons/apple-touch-icon-57x57.png" />
           <a href="/"><p>MyMiniIndex</p></a>
           <div class="cluster" style="position: absolute; right: 2rem;">
-            <a href="/"><br />Home</a>
-            <a href="/pages/directories.html"><br />Directories</a>
-            <a href="/pages/pending.html"><br />Pending</a>
-            <a href="/pages/share.html"><br />Share</a>
+            <a href="/" class="icon">
+              <br />
+              <ion-icon name="home-outline"></ion-icon>
+            </a>
+            <a href="/directories" class="icon">
+              <br />
+              <ion-icon name="folder-open-outline"></ion-icon
+            ></a>
+            <a href="/pending" class="icon"
+              ><br /><ion-icon name="enter"></ion-icon
+            ></a>
+            <!--<a href="/share"><br />Share</a>-->
           </div>
         </div>
       `;
