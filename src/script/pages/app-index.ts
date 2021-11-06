@@ -1,19 +1,20 @@
-import { LitElement, css, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { LitElement, css, html } from "lit";
+import { customElement } from "lit/decorators.js";
 
-import './app-home';
+import "./app-home";
 
-import { Router } from '@vaadin/router';
+import { Router } from "@vaadin/router";
 
-import '../components/nav-bar';
-import '../components/mini-card';
+import "../components/nav-bar";
+import "../components/mini-card";
+import "../components/mobile-header";
 
-@customElement('app-index')
+@customElement("app-index")
 export class AppIndex extends LitElement {
   static get styles() {
     return css`
       main {
-        padding: 16px;
+        padding: 0.5rem;
       }
 
       #routerOutlet > * {
@@ -59,49 +60,49 @@ export class AppIndex extends LitElement {
     // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
 
     // For more info on using the @vaadin/router check here https://vaadin.com/router
-    const router = new Router(this.shadowRoot?.querySelector('#routerOutlet'));
+    const router = new Router(this.shadowRoot?.querySelector("#routerOutlet"));
     router.setRoutes([
       // temporarily cast to any because of a Type bug with the router
       {
-        path: '',
+        path: "",
         animate: true,
         children: [
-          { path: '/', component: 'app-home' },
+          { path: "/", component: "app-home" },
           {
-            path: '/directories',
-            component: 'app-directories',
+            path: "/directories",
+            component: "app-directories",
             action: async () => {
-              await import('./app-directories.js');
+              await import("./app-directories.js");
             },
           },
           {
-            path: '/pending',
-            component: 'app-pending',
+            path: "/pending",
+            component: "app-pending",
             action: async () => {
-              await import('./app-pending.js');
+              await import("./app-pending.js");
             },
           },
           {
-            path: '/view/(.*)',
-            component: 'view-mini',
+            path: "/view/(.*)",
+            component: "view-mini",
             action: async () => {
-              await import('./view-mini.js');
+              await import("./view-mini.js");
             },
           },
           {
-              path: '/edit/(.*)',
-              component: 'edit-mini',
-              action: async () => {
-                await import('./edit-mini.js');
-              },
-          },/*
+            path: "/edit/(.*)",
+            component: "edit-mini",
+            action: async () => {
+              await import("./edit-mini.js");
+            },
+          } /*
           {
             path: '/share',
             component: 'app-share',
             action: async () => {
               await import('./app-share.js');
             },
-          },*/
+          },*/,
         ],
       } as any,
     ]);

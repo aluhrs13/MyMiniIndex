@@ -1,61 +1,46 @@
-import { LitElement, css, html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { LitElement, css, html } from "lit";
+import { customElement, state } from "lit/decorators.js";
 import { Mini } from "../helpers/Mini";
 import { getMiniList } from "../helpers/idbAccessHelpers";
 import { until } from "lit/directives/until.js";
 
 // For more info on the @pwabuilder/pwainstall component click here https://github.com/pwa-builder/pwa-install
-import '@pwabuilder/pwainstall';
+import "@pwabuilder/pwainstall";
 
-@customElement('app-home')
+@customElement("app-home")
 export class AppHome extends LitElement {
-
   static get styles() {
     return css`
+      #gallery {
+        width: 100%;
+      }
 
-#gallery {
-  width: 100%;
-}
+      #searchString {
+        width: 100%;
+        font-size: large;
+      }
+      .grid {
+        display: inline-grid;
+        grid-gap: 1rem;
+      }
 
-#viewer {
-  max-width: 628px;
-  margin: 0px;
-}
+      @supports (width: min(318px, 100%)) {
+        .grid {
+          grid-template-columns: repeat(
+            auto-fit,
+            minmax(min(318px, 100%), 1fr)
+          );
+        }
+      }
 
-#viewerbg {
-  background-color: rgb(202, 227, 223);
-  z-index: -1;
-  width: 642px;
-  max-width: 642px;
-  height: 100%;
-  position: fixed;
-  right: 0;
-  top: 0;
-}
-
-#searchString {
-  width: 80%;
-  font-size: large;
-  margin: 2rem;
-}
-.grid {
-  display: inline-grid;
-  grid-gap: 1rem;
-}
-
-@supports (width: min(318px, 100%)) {
-  .grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(318px, 100%), 1fr));
-  }
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  align-items: stretch;
-}
-    `
+      .row {
+        display: flex;
+        flex-direction: row;
+        gap: 0.25rem;
+        align-items: stretch;
+        margin: 0.5rem;
+      }
+    `;
   }
 
   constructor() {
@@ -65,47 +50,57 @@ export class AppHome extends LitElement {
   }
 
   @state()
-  _minis:Promise<Set<Mini>>
-  _searchString:string;
+  _minis: Promise<Set<Mini>>;
+  _searchString: string;
 
-  _search(e?:Event){
-    if(e){
+  _search(e?: Event) {
+    if (e) {
       e.preventDefault();
       //@ts-ignore
       this._searchString = this.renderRoot.querySelector("#searchString").value;
     }
-    console.log("[Home] Searching...")
+    console.log("[Home] Searching...");
     this._minis = getMiniList(this._searchString);
-    history.pushState(null, null, "#"+this._searchString);
+    history.pushState(null, null, "#" + this._searchString);
   }
 
-  firstUpdated(){
-    if(this._searchString){
+  firstUpdated() {
+    if (this._searchString) {
       this._search();
     }
   }
 
   render() {
-    console.log("[Home] Rendering...")
+    console.log("[Home] Rendering...");
     return until(
       this._minis.then((data) => {
         const itemTemplates = [];
         for (const i of data.values()) {
-          itemTemplates.push(html`<mini-card name=${i.fullPath.join("/")}></mini-card>`);
+          itemTemplates.push(
+            html`<mini-card name=${i.fullPath.join("/")}></mini-card>`
+          );
         }
-        return html`
-          <h1>My Index</h1>
+        return html` <mobile-header>
+            <h1 slot="text">Your Index</h1>
+          </mobile-header>
           <div style="width: 100%">
-            <div align="center">
-              <input type="text" placeholder="Search" id="searchString" value="${this._searchString}"} />
-              <button style="font-size: large"  @click="${this._search}">Search</button>
+            <div class="row">
+              <input
+                type="text"
+                placeholder="Search"
+                id="searchString"
+                value="${this._searchString}"
+                }
+              />
+              <button style="font-size: large" @click="${this._search}">
+                <ion-icon name="search-outline"></ion-icon>
+              </button>
             </div>
-            <div class="grid" id="gallery">
-            ${itemTemplates}
-            </div>
-          </div>`
-      })
-      ,html`<span>Loading...</span>`);
+            <div class="grid" id="gallery">${itemTemplates}</div>
+          </div>`;
+      }),
+      html`<span>Loading...</span>`
+    );
   }
 }
 

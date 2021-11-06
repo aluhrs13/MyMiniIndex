@@ -8,11 +8,9 @@ import { getMini } from "../helpers/idbAccessHelpers";
 import { Mini } from "../helpers/Mini";
 import { getRelativeDirectoy } from "../helpers/settings";
 
-import "./edit-mini"
+import "./edit-mini";
 
-import {
-  RouterLocation,
-} from '@vaadin/router';
+import { RouterLocation, Router } from "@vaadin/router";
 
 @customElement("view-mini")
 export class ViewMini extends LitElement {
@@ -55,7 +53,7 @@ export class ViewMini extends LitElement {
     }
 
     img {
-      max-width: 628px;
+      max-width: 100%;
     }
   `;
   @state()
@@ -63,42 +61,56 @@ export class ViewMini extends LitElement {
   _mini: Promise<Mini>;
 
   public onAfterEnter(location: RouterLocation): void {
-    this.name=decodeURI(location.pathname.replace("/view/",""))
-    console.log("[View Mini] Viewing "+this.name)
+    this.name = decodeURI(location.pathname.replace("/view/", ""));
+    console.log("[View Mini] Viewing " + this.name);
+  }
+
+  _editMini() {
+    this._mini.then((data) => {
+      Router.go({
+        pathname: "/edit/" + encodeURI(data.fullPath.join("/")),
+      });
+    });
   }
 
   render() {
-    console.log("[View Mini] Rendering Mini ")
+    console.log("[View Mini] Rendering Mini ");
     this._mini = getMini(this.name);
 
     return until(
       this._mini.then((data) => {
-        data.fullPath.pop();
-        var path = getRelativeDirectoy() + data.fullPath.join("\\");
+        var path =
+          getRelativeDirectoy() + data.fullPath.slice(0, -1).join("\\");
 
         return html`
+          <mobile-header>
+            <button slot="buttonTwo" @click="${this._editMini}">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </button>
+            <h1 slot="text">${data.name}</h1>
+          </mobile-header>
           <div>
-            <div class="row">
-              <h1 id="name">${data.name}</h1>
-            <a href="/edit/${this.name}">Edit</a>
-            </div>
-
-            <div>
-              <img src="${data.base64Image}" />
-            </div>
-            <div class="stack">
+            <div class="switcher">
               <div>
-                <a target="_blank" href="${path}">${path}</a>
+                <img src="${data.base64Image}" />
               </div>
-              <div>
-                <h2>Tags</h2>
-                ${data.tags.join(", ")}
+              <div class="stack">
+                <div>
+                  <h2>Folder</h2>
+                  <div>
+                    <a target="_blank" href="${path}">${path}</a>
+                  </div>
+                </div>
+                <div>
+                  <h2>Tags</h2>
+                  ${data.tags.join(", ")}
+                </div>
+                <div>
+                  <h2>URL</h2>
+                  ${data.url}
+                </div>
+                <div></div>
               </div>
-              <div>
-                <h2>URL</h2>
-                ${data.url}
-              </div>
-              <div></div>
             </div>
           </div>
         `;
