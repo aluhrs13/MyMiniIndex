@@ -65,7 +65,7 @@ export class AppIndex extends LitElement {
       // temporarily cast to any because of a Type bug with the router
       {
         path: "",
-        animate: true,
+        animate: false,
         children: [
           { path: "/", component: "app-home" },
           {

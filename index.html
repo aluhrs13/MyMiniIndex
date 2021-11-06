@@ -40,9 +40,37 @@
 
     <!--<script type="module" src="/build/src/script/pages/app-index.js"></script>-->
     <script type="module" src="src/script/pages/app-index.ts"></script>
+
+    <style>
+      .subheader{
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        height: 56px;
+        width: 100%;
+        background-color: var(--app-primary-color);
+        color: white;
+        display: flex;
+      }
+
+      @media (min-width:450px){
+        .subheader{
+          position:absolute;
+          left:0px;
+          top:56px;
+          width:100%;
+          height:56px;
+          background-color: var(--app-secondary-color)
+        }
+      }
+    </style>
+
   </head>
 
   <body>
+    <div style="position:absolute; left:0px; top:0px; width:100%; height:56px; background-color: var(--app-primary-color)"></div>
+    <div class="subheader"></div>
+
     <!-- Our app-index web component. This component is defined in src/pages/app-index.ts-->
     <fast-design-system-provider use-defaults>
       <app-index></app-index>
