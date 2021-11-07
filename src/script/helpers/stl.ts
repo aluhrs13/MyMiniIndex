@@ -8,11 +8,13 @@ let camera: PerspectiveCamera, scene: Scene, renderer: WebGLRenderer;
 let getImageData = false;
 let imageData = "";
 let stlData: ArrayBuffer | string;
+let endAnimation: boolean;
 
 export async function renderSTL(
   blob: string | ArrayBuffer,
   parentElement: HTMLElement
 ) {
+  endAnimation = false;
   stlData = blob;
   console.log("[STL] Rendering STL");
   container = document.createElement("div");
@@ -103,19 +105,29 @@ function onWindowResize() {
 }
 
 function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-  if (getImageData == true) {
-    getImageData = false;
-    imageData = renderer.domElement.toDataURL();
+  if (!endAnimation) {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+    if (getImageData == true) {
+      getImageData = false;
+      imageData = renderer.domElement.toDataURL();
+    }
   }
 }
 
 export function cleanUp() {
-  stlData = null;
   console.log("[STL] Cleaning up");
+
+  window.removeEventListener("resize", onWindowResize);
+  stlData = null;
+  endAnimation = true;
   disposeNode(scene);
-  console.log(scene);
+  renderer.dispose();
+
+  for (let i = 0; i < scene.children.length; i = i + 1) {
+    scene.children[i] = null;
+  }
+  //console.log(scene);
 }
 
 export function getImage() {
@@ -128,7 +140,9 @@ let disposeNode = function (parentObject: Scene) {
   parentObject.traverse(function (node) {
     if (node instanceof THREE.Mesh) {
       if (node.geometry) {
+        node.geometry.attributes = null;
         node.geometry.dispose();
+        node.geometry = null;
       }
 
       if (node.material) {
