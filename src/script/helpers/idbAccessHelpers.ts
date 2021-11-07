@@ -1,4 +1,7 @@
 import { get, set, values, createStore } from "idb-keyval";
+
+import Fuse from "fuse.js";
+
 import { Mini, Status } from "./Mini";
 
 export async function addMini(
@@ -33,7 +36,6 @@ export async function updateMini(mini: Mini): Promise<void> {
 
 export async function getMini(name: string): Promise<Mini> {
   try {
-    console.log("[IDB] Getting Mini " + name);
     let mini = await get(name);
 
     if (mini) {
@@ -45,25 +47,24 @@ export async function getMini(name: string): Promise<Mini> {
   console.error("[IDB] Mini not found");
 }
 
-export async function getMiniList(searchString?: string): Promise<Set<Mini>> {
+export async function getMiniList(
+  searchString?: string
+): Promise<Fuse.FuseResult<Mini>[] | Mini[]> {
   console.log("[IDB] Listing Minis");
   return values().then((values: Mini[]) => {
-    if (searchString) {
-      let arr1 = values
-        .filter((value) => value.status == Status.Approved)
-        .filter((value) => value.tags.includes(searchString));
+    let options = {
+      includeScore: true,
+      // equivalent to `keys: [['author', 'tags', 'value']]`
+      keys: ["tags", "name"],
+      threshold: 0.4,
+    };
 
-      let arr2 = values
-        .filter((value) => value.status == Status.Approved)
-        .filter((value) =>
-          value.name
-            .toLowerCase()
-            .split(" ")
-            .includes(searchString.toLowerCase())
-        );
-      return new Set(arr1.concat(arr2));
+    let fuse = new Fuse(values, options);
+
+    if (searchString) {
+      return fuse.search(searchString);
     } else {
-      return new Set(values.filter((value) => value.status == Status.Approved));
+      return values;
     }
   });
 }

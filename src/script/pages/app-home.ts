@@ -1,7 +1,9 @@
 import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
-
 import { until } from "lit/directives/until.js";
+
+import Fuse from "fuse.js";
+
 import { Mini } from "../helpers/Mini";
 import { getMiniList } from "../helpers/idbAccessHelpers";
 
@@ -48,7 +50,7 @@ export class AppHome extends LitElement {
   }
 
   @state()
-  _minis: Promise<Set<Mini>>;
+  _minis: Promise<Fuse.FuseResult<Mini>[] | Mini[]>;
   _searchString: string;
 
   _search(e?: Event) {
@@ -73,10 +75,19 @@ export class AppHome extends LitElement {
     return until(
       this._minis.then((data) => {
         const itemTemplates = [];
-        for (const i of data.values()) {
-          itemTemplates.push(
-            html`<mini-card name=${i.fullPath.join("/")}></mini-card>`
-          );
+        for (const i of data) {
+          //@ts-ignore
+          if (i.item) {
+            itemTemplates.push(
+              //@ts-ignore
+              html`<mini-card name=${i.item.fullPath.join("/")}></mini-card>`
+            );
+          } else {
+            itemTemplates.push(
+              //@ts-ignore
+              html`<mini-card name=${i.fullPath.join("/")}></mini-card>`
+            );
+          }
         }
 
         if (itemTemplates.length == 0) {
