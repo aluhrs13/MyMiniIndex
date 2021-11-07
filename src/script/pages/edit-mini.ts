@@ -5,7 +5,7 @@ import { until } from "lit/directives/until.js";
 import { Router } from "@vaadin/router";
 import { RouterLocation } from "@vaadin/router";
 
-import { getImage } from "../helpers/stl";
+import { getImage, cleanUp } from "../helpers/stl";
 import { renderFile } from "../helpers/fileAccessHelpers";
 import { getMini, updateMini } from "../helpers/idbAccessHelpers";
 import { Mini, Status } from "../helpers/Mini";
@@ -60,6 +60,11 @@ export class EditMini extends LitElement {
 
     textarea {
       height: 7rem;
+    }
+
+    #loadModelButton {
+      position: relative;
+      right: 0px;
     }
   `;
 
@@ -117,10 +122,13 @@ export class EditMini extends LitElement {
   _loadModel() {
     try {
       this._mini.then((data) => {
-        renderFile(data, this.renderRoot.querySelector("#model")).then();
-        this.renderRoot.querySelector("#loadModelButton").remove();
+        renderFile(data, this.renderRoot.querySelector("#model")).then(() => {
+          this.renderRoot.querySelector("#loadModelButton").remove();
+        });
       });
-    } catch (e) {}
+    } catch (e) {
+      return;
+    }
   }
 
   public onAfterEnter(location: RouterLocation): void {
@@ -131,6 +139,11 @@ export class EditMini extends LitElement {
   async _handler() {
     await this.updateComplete;
     this._loadModel();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    cleanUp();
   }
 
   render() {
@@ -158,15 +171,18 @@ export class EditMini extends LitElement {
             <h1 slot="text">${data.name}</h1>
           </mobile-header>
           <div class="switcher">
-            <div align="center">
+            <div>
+              <div id=" row">
+                Position model in box for thumbnail
+
+                <button @click="${this._loadModel}" id="loadModelButton">
+                  Load Model...
+                </button>
+              </div>
               <div
                 id="model"
                 style="width: 628px; height: 472px; border-style: solid"
               ></div>
-              <br />
-              <button @click="${this._loadModel}" id="loadModelButton">
-                Load Model...
-              </button>
             </div>
             <div class="stack">
               <div>

@@ -78,6 +78,20 @@ export class AppHome extends LitElement {
             html`<mini-card name=${i.fullPath.join("/")}></mini-card>`
           );
         }
+
+        if (itemTemplates.length == 0) {
+          itemTemplates.push(
+            html`<div align="center">
+              <br />
+              <p style="font-size:large;">
+                No Minis found. Go to
+                <a href="/directories">Directories page</a> to add a directory
+                or <a href="/pending">Pending page</a> to tag them.
+              </p>
+            </div>`
+          );
+        }
+
         return html` <mobile-header>
             <h1 slot="text">Your Index</h1>
           </mobile-header>

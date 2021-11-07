@@ -35,6 +35,32 @@ export class AppPending extends LitElement {
     });
   }
 
+  _printPendingList(miniList: Mini[]) {
+    if (miniList.length == 0) {
+      return html`<div align="center">
+        <br />
+        <p style="font-size:large;">
+          No Minis are pending approval. Go to the
+          <a href="/directories">Directories page</a> to add a new directory to
+          scan.
+        </p>
+      </div>`;
+    } else {
+      return html` <ul id="pendingList">
+        ${miniList.map((mini) => {
+          return html` <li>
+            <a href="/edit/${mini.fullPath.join("/")}">
+              <b>${mini.name}</b>
+            </a>
+            <br />
+            ${mini.fullPath.slice(0, -1).join("/")}
+            <hr />
+          </li>`;
+        })}
+      </ul>`;
+    }
+  }
+
   render() {
     console.log("[Pending] Rendering...");
     this._minis = getPendingMinis();
@@ -48,19 +74,7 @@ export class AppPending extends LitElement {
           <mobile-header>
             <h1 slot="text">Pending Minis</h1>
           </mobile-header>
-          <div id="model"></div>
-          <ul id="pendingList">
-            ${data.map((mini) => {
-              return html` <li>
-                <a href="/edit/${mini.fullPath.join("/")}">
-                  <b>${mini.name}</b>
-                </a>
-                <br />
-                ${mini.fullPath.slice(0, -1).join("/")}
-                <hr />
-              </li>`;
-            })}
-          </ul>
+          ${this._printPendingList(data)}
         `;
       }),
       html`<span>Loading...</span>`

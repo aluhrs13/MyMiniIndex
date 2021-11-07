@@ -94,6 +94,50 @@ export class AppDirectories extends LitElement {
     });
   }
 
+  _printDirList() {
+    if (this.directories.length == 0) {
+      return html`<div align="center">
+        <br />
+        <p style="font-size:large;">
+          No directories are bring scanned. Hit the plus sign above to add a
+          directory to scan, then go to the
+          <a href="/pending">Pending page</a> to add them to your index.
+        </p>
+      </div>`;
+    } else {
+      return repeat(
+        this.directories,
+        (directory) => {
+          directory.name;
+        },
+        (directory) => {
+          return html` <li class="row">
+            <div>
+              <button
+                @click="${() => {
+                  this._removeDir(directory);
+                }}"
+              >
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+            <div>
+              <button
+                @click="${() => {
+                  this._scanDir(directory);
+                }}"
+              >
+                <ion-icon name="refresh-outline"></ion-icon>
+              </button>
+            </div>
+
+            <div>${directory.name}</div>
+          </li>`;
+        }
+      );
+    }
+  }
+
   //TODO: For some reason when _addDir re-renders, these console logs have the updated directories list, but not the loop.
   render() {
     console.log("[Directories] Rendering...");
@@ -114,36 +158,7 @@ export class AppDirectories extends LitElement {
       </div>
 
       <ul id="directoryList">
-        ${repeat(
-          this.directories,
-          (directory) => {
-            directory.name;
-          },
-          (directory) => {
-            return html` <li class="row">
-              <div>
-                <button
-                  @click="${() => {
-                    this._removeDir(directory);
-                  }}"
-                >
-                  <ion-icon name="trash-outline"></ion-icon>
-                </button>
-              </div>
-              <div>
-                <button
-                  @click="${() => {
-                    this._scanDir(directory);
-                  }}"
-                >
-                  <ion-icon name="refresh-outline"></ion-icon>
-                </button>
-              </div>
-
-              <div>${directory.name}</div>
-            </li>`;
-          }
-        )}
+        ${this._printDirList()}
       </ul>
     `;
   }
