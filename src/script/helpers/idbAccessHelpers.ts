@@ -4,24 +4,25 @@ import { Mini, Status } from "./Mini";
 export async function addMini(
   directoryChain: string[],
   miniHandle: FileSystemHandle
-) {
+): Promise<void> {
   console.log("[IDB] Adding Mini...");
   try {
     let key = JSON.parse(JSON.stringify(directoryChain));
 
     let mini = new Mini(key, miniHandle);
-    let miniTest = await get(key.join("/"));
+    let miniTest = await get(mini.fullPath.join("/"));
 
     if (miniTest) {
       return;
+    } else {
+      await set(mini.fullPath.join("/"), mini);
     }
-    await set(mini.fullPath.join("/"), mini);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 }
 
-export async function updateMini(mini: Mini) {
+export async function updateMini(mini: Mini): Promise<void> {
   console.log("[IDB] Updating Mini...");
   try {
     await set(mini.fullPath.join("/"), mini);
@@ -30,7 +31,7 @@ export async function updateMini(mini: Mini) {
   }
 }
 
-export async function getMini(name: string) {
+export async function getMini(name: string): Promise<Mini> {
   try {
     console.log("[IDB] Getting Mini " + name);
     let mini = await get(name);
@@ -67,16 +68,16 @@ export async function getMiniList(searchString?: string): Promise<Set<Mini>> {
   });
 }
 
-export async function getPendingMinis() {
-  console.log("[IDB] Listing Pending Minis");
+export async function getPendingMinis(): Promise<Mini[]> {
+  console.log("[IDB] Listing pending Minis");
   return values().then((values) => {
     return values.filter((value) => value.status == Status.Pending);
   });
 }
 
-export async function getDirectoryHandle(dir: string) {
+export async function getDirectoryHandle(
+  dir: string
+): Promise<FileSystemHandle> {
   console.log("[IDB] Getting directory handle");
-  console.log(dir);
-
   return await get(dir, createStore("My-Mini-Index", "directory-list"));
 }

@@ -1,9 +1,11 @@
 import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { until } from "lit/directives/until.js";
+
+import { Router } from "@vaadin/router";
+
 import { Mini } from "../helpers/Mini";
 import { getPendingMinis } from "../helpers/idbAccessHelpers";
-import { until } from "lit/directives/until.js";
-import { Router } from "@vaadin/router";
 
 @customElement("app-pending")
 export class AppPending extends LitElement {
@@ -22,11 +24,6 @@ export class AppPending extends LitElement {
 
   constructor() {
     super();
-
-    if (location.hash == "#next") {
-      this._minis = getPendingMinis();
-      this._goThroughAll();
-    }
   }
 
   _goThroughAll() {
@@ -41,6 +38,9 @@ export class AppPending extends LitElement {
   render() {
     console.log("[Pending] Rendering...");
     this._minis = getPendingMinis();
+    if (location.href.endsWith("pendingnext")) {
+      this._goThroughAll();
+    }
 
     return until(
       this._minis.then((data) => {

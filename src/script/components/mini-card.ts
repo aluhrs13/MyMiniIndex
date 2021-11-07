@@ -1,8 +1,9 @@
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { until } from "lit/directives/until.js";
+
 import { getMini } from "../helpers/idbAccessHelpers";
 import { Mini } from "../helpers/Mini";
-import { until } from "lit/directives/until.js";
 
 @customElement("mini-card")
 export class MiniCard extends LitElement {
@@ -45,13 +46,11 @@ export class MiniCard extends LitElement {
 
   @state()
   _mini: Promise<Mini>;
-  event: CustomEvent;
 
-  constructor(){
+  constructor() {
     super();
   }
 
-  //TODO: Re-style
   render() {
     this._mini = getMini(this.name);
 
@@ -59,16 +58,14 @@ export class MiniCard extends LitElement {
       this._mini.then((data) => {
         return html`
           <div class="card">
-            <div>
-              <a href="/view/${this.name}">
-                <img
-                  class="card-thumbnail"
-                  width="314"
-                  height="236"
-                  src="${data.base64Image}"
-                />
-              </a>
-            </div>
+            <a href="/view/${this.name}">
+              <img
+                class="card-thumbnail"
+                width="314"
+                height="236"
+                src="${data.base64Image}"
+              />
+            </a>
             <div class="mini-name">
               <h3>${data.name}</h3>
             </div>

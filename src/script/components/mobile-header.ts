@@ -10,6 +10,10 @@ export class MobileHeader extends LitElement {
       align-items: stretch;
     }
 
+    .spacer {
+      height: 56px;
+    }
+
     .head {
       position: absolute;
       left: 0px;
@@ -23,6 +27,31 @@ export class MobileHeader extends LitElement {
       padding: 0px;
       display: flex;
       direction: row;
+    }
+
+    .head ::slotted(h1) {
+      margin: 0px;
+      font-weight: lighter;
+      font-size: large;
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    .head ::slotted(button) {
+      width: 56px;
+      min-width: 48px;
+      min-height: 48px;
+      font-size: x-large;
+      background-color: var(--app-primary-color);
+      color: white;
+      font-weight: 800;
+      border: none;
+    }
+
+    .headerText {
+      width: 100%;
+      font-size: medium;
+      text-align: center;
     }
 
     .subheader {
@@ -40,20 +69,6 @@ export class MobileHeader extends LitElement {
       direction: row;
     }
 
-    .headerText {
-      width: 100%;
-      font-size: medium;
-      text-align: center;
-    }
-
-    .head ::slotted(h1) {
-      margin: 0px;
-      font-weight: lighter;
-      font-size: large;
-      height: 100%;
-      vertical-align: middle;
-    }
-
     .subheader ::slotted(h1) {
       margin: 0px;
       padding-top: 0.75rem;
@@ -62,17 +77,6 @@ export class MobileHeader extends LitElement {
       font-size: x-large;
       height: 100%;
       vertical-align: middle;
-    }
-
-    .head ::slotted(button) {
-      width: 56px;
-      min-width: 48px;
-      min-height: 48px;
-      font-size: x-large;
-      background-color: var(--app-primary-color);
-      color: white;
-      font-weight: 800;
-      border: none;
     }
 
     .subheader ::slotted(button) {
@@ -84,9 +88,6 @@ export class MobileHeader extends LitElement {
       color: black;
       font-weight: 800;
       border: none;
-    }
-    .spacer {
-      height: 56px;
     }
   `;
 

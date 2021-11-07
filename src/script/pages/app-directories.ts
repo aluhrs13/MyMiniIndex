@@ -17,12 +17,6 @@ export class AppDirectories extends LitElement {
         gap: 0.5rem;
         align-items: stretch;
       }
-      .row {
-        display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
-        align-items: center;
-      }
       button {
         height: 100%;
         min-width: 48px;
@@ -30,6 +24,18 @@ export class AppDirectories extends LitElement {
         font-size: x-large;
         background: none;
         border: none;
+      }
+      .row {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      #scanning {
+        width: 80%;
+        height: 56px;
+        background-color: lightyellow;
+        padding: 1rem;
       }
     `;
   }
@@ -60,29 +66,38 @@ export class AppDirectories extends LitElement {
       .then((dir) => {
         this.directories.push(dir);
         set(dir.name, dir, this.store);
-        this._scanDirs();
+        this._scanDir(dir);
+        this.requestUpdate();
       });
   }
 
   _scanDirs() {
-    scanAllDirectories(this.directories);
-    this.render();
+    this.renderRoot.querySelector("#scanning").toggleAttribute("hidden");
+    console.log("[Directories] Scanning all directories");
+    scanAllDirectories(this.directories).then(() => {
+      this.renderRoot.querySelector("#scanning").toggleAttribute("hidden");
+    });
   }
 
   _removeDir(dir: FileSystemHandle) {
-    console.log("[Directories] Removing" + dir.name);
-    delete this.directories[this.directories.indexOf(dir)];
+    console.log("[Directories] Removing " + dir.name);
+    this.directories.splice(this.directories.indexOf(dir), 1);
     del(dir.name, this.store);
+    this.requestUpdate();
   }
 
   _scanDir(dir: FileSystemHandle) {
-    console.log("[Directories] Scanning" + dir.name);
-    scanAllDirectories(new Array(dir));
+    this.renderRoot.querySelector("#scanning").toggleAttribute("hidden");
+    console.log("[Directories] Scanning " + dir.name);
+    scanAllDirectories(new Array(dir)).then(() => {
+      this.renderRoot.querySelector("#scanning").toggleAttribute("hidden");
+    });
   }
 
   //TODO: For some reason when _addDir re-renders, these console logs have the updated directories list, but not the loop.
   render() {
     console.log("[Directories] Rendering...");
+    console.log(this.directories);
     return html`
       <mobile-header>
         <button slot="buttonOne" @click="${this._addDir}">
@@ -93,6 +108,11 @@ export class AppDirectories extends LitElement {
         </button>
         <h1 slot="text">Directories</h1>
       </mobile-header>
+
+      <div align="center">
+        <div id="scanning" hidden>Scanning directories...</div>
+      </div>
+
       <ul id="directoryList">
         ${repeat(
           this.directories,

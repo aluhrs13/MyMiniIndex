@@ -1,16 +1,13 @@
-//Lit Imports
 import { html, css, LitElement } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 
-//Local Imports
+import { RouterLocation, Router } from "@vaadin/router";
+
 import { getMini } from "../helpers/idbAccessHelpers";
 import { Mini } from "../helpers/Mini";
 import { getRelativeDirectoy } from "../helpers/settings";
-
 import "./edit-mini";
-
-import { RouterLocation, Router } from "@vaadin/router";
 
 @customElement("view-mini")
 export class ViewMini extends LitElement {
@@ -107,7 +104,7 @@ export class ViewMini extends LitElement {
                 </div>
                 <div>
                   <h2>URL</h2>
-                  ${data.url}
+                  <a href="${data.url}" target="_blank"> ${data.url} </a>
                 </div>
                 <div></div>
               </div>

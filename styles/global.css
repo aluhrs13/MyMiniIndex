@@ -8,34 +8,7 @@
     sans-serif;
 }
 
-.with-sidebar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s1);
-}
-
-.with-sidebar > :first-child {
-  flex-grow: 1;
-}
-
-.with-sidebar > :last-child {
-  flex-basis: 0;
-  flex-grow: 999;
-  min-width: 50%;
-}
-
-.pending-mini {
-  padding: 1rem;
-}
-
 body {
   margin-top: 66px;
   margin-bottom: 86px;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  align-items: stretch;
 }

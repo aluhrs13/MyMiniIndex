@@ -1,27 +1,19 @@
-//Lit Imports
 import { html, css, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { until } from "lit/directives/until.js";
 
-//Local Imports
+import { Router } from "@vaadin/router";
+import { RouterLocation } from "@vaadin/router";
+
 import { getImage } from "../helpers/stl";
-import { renderFile, verifyPermission } from "../helpers/fileAccessHelpers";
-import {
-  getMini,
-  updateMini,
-  getDirectoryHandle,
-} from "../helpers/idbAccessHelpers";
+import { renderFile } from "../helpers/fileAccessHelpers";
+import { getMini, updateMini } from "../helpers/idbAccessHelpers";
 import { Mini, Status } from "../helpers/Mini";
 import { getExcludeTagSuggestions } from "../helpers/settings";
-
-import { Router } from "@vaadin/router";
-
-import { RouterLocation } from "@vaadin/router";
 
 @customElement("edit-mini")
 export class EditMini extends LitElement {
   static styles = css`
-    /* Utility */
     .row {
       display: flex;
       flex-direction: row;
@@ -60,7 +52,6 @@ export class EditMini extends LitElement {
       margin-top: var(--space, 1.5rem);
     }
 
-    /* Style */
     textarea,
     input {
       width: calc(100% - 1rem);
@@ -69,14 +60,6 @@ export class EditMini extends LitElement {
 
     textarea {
       height: 7rem;
-    }
-
-    #closeButton {
-      position: absolute;
-      right: 0.5rem;
-      top: 0.5rem;
-      width: 2rem;
-      height: 2rem;
     }
   `;
 
@@ -96,7 +79,6 @@ export class EditMini extends LitElement {
         data.base64Image = getImage();
       }
 
-      //TODO: Figure out how to do this right in TS
       data.tags = this.renderRoot
         .querySelector("#tagStr")
         //@ts-ignore
@@ -118,13 +100,12 @@ export class EditMini extends LitElement {
         });
       } else {
         Router.go({
-          pathname: "/pending",
+          pathname: "/pendingnext",
         });
       }
     });
   }
 
-  //Removes the Mini from the user's index
   _removeMini() {
     this._mini.then((data) => {
       data.status = Status.Rejected;
@@ -136,7 +117,7 @@ export class EditMini extends LitElement {
   _loadModel() {
     try {
       this._mini.then((data) => {
-        renderFile(data, this.renderRoot.querySelector("#model"));
+        renderFile(data, this.renderRoot.querySelector("#model")).then();
         this.renderRoot.querySelector("#loadModelButton").remove();
       });
     } catch (e) {}

@@ -1,29 +1,28 @@
 import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
+
+import { until } from "lit/directives/until.js";
 import { Mini } from "../helpers/Mini";
 import { getMiniList } from "../helpers/idbAccessHelpers";
-import { until } from "lit/directives/until.js";
 
-// For more info on the @pwabuilder/pwainstall component click here https://github.com/pwa-builder/pwa-install
-import "@pwabuilder/pwainstall";
+import "../components/mini-card";
 
 @customElement("app-home")
 export class AppHome extends LitElement {
   static get styles() {
     return css`
-      #gallery {
+      .fullWidth {
         width: 100%;
       }
-
+      #gallery {
+      }
       #searchString {
-        width: 100%;
         font-size: large;
       }
       .grid {
         display: inline-grid;
         grid-gap: 1rem;
       }
-
       @supports (width: min(318px, 100%)) {
         .grid {
           grid-template-columns: repeat(
@@ -32,7 +31,6 @@ export class AppHome extends LitElement {
           );
         }
       }
-
       .row {
         display: flex;
         flex-direction: row;
@@ -84,19 +82,24 @@ export class AppHome extends LitElement {
             <h1 slot="text">Your Index</h1>
           </mobile-header>
           <div style="width: 100%">
-            <div class="row">
+            <form class="row">
               <input
                 type="text"
                 placeholder="Search"
                 id="searchString"
+                class="fullWidth"
                 value="${this._searchString}"
+                autofocus
                 }
               />
-              <button style="font-size: large" @click="${this._search}">
+              <button
+                style="font-size: large; width: 6rem;"
+                @click="${this._search}"
+              >
                 <ion-icon name="search-outline"></ion-icon>
               </button>
-            </div>
-            <div class="grid" id="gallery">${itemTemplates}</div>
+            </form>
+            <div class="grid fullWidth" id="gallery">${itemTemplates}</div>
           </div>`;
       }),
       html`<span>Loading...</span>`

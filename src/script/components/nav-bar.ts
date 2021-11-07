@@ -4,6 +4,15 @@ import { customElement, state } from "lit/decorators.js";
 @customElement("nav-bar")
 export class NavBar extends LitElement {
   static styles = css`
+    a {
+      color: white;
+      text-decoration: none;
+    }
+
+    img {
+      padding: 8px;
+    }
+
     .head {
       position: absolute;
       left: 0px;
@@ -17,10 +26,6 @@ export class NavBar extends LitElement {
       padding: 0px;
       display: flex;
       direction: row;
-    }
-
-    .head > p {
-      margin-left: 0.5rem;
     }
 
     .mobile-nav {
@@ -42,11 +47,7 @@ export class NavBar extends LitElement {
       text-align: center;
       height: 100%;
       width: 25%;
-    }
-
-    a {
-      color: white;
-      text-decoration: none;
+      font-size: large;
     }
 
     .mobile-nav a {
@@ -62,10 +63,6 @@ export class NavBar extends LitElement {
       align-items: center;
       height: 100%;
       width: 33%;
-    }
-
-    img {
-      padding: 8px;
     }
   `;
 
@@ -85,12 +82,10 @@ export class NavBar extends LitElement {
     this._size = window.innerWidth;
   }
 
-  //TODO: This doesn't work
   _handleResize() {
     this._size = window.innerWidth;
   }
 
-  //TODO: Get image link to work
   render() {
     if (this._size < 450) {
       return html`
@@ -104,7 +99,6 @@ export class NavBar extends LitElement {
           <a href="/pending" class="icon"
             ><br /><ion-icon name="enter"></ion-icon
           ></a>
-          <!--<a href="/share"><br />Share</a>-->
         </div>
       `;
     } else {
@@ -124,7 +118,6 @@ export class NavBar extends LitElement {
             <a href="/pending" class="icon"
               ><br /><ion-icon name="enter"></ion-icon
             ></a>
-            <!--<a href="/share"><br />Share</a>-->
           </div>
         </div>
       `;
