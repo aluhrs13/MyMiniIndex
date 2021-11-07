@@ -6,7 +6,7 @@ import { RouterLocation, Router } from "@vaadin/router";
 
 import { getMini } from "../helpers/idbAccessHelpers";
 import { Mini } from "../helpers/Mini";
-import { getRelativeDirectoy } from "../helpers/settings";
+import { getSetting, initSettings } from "../helpers/settings";
 import "./edit-mini";
 
 @customElement("view-mini")
@@ -73,11 +73,13 @@ export class ViewMini extends LitElement {
   render() {
     console.log("[View Mini] Rendering Mini ");
     this._mini = getMini(this.name);
+    initSettings();
 
     return until(
       this._mini.then((data) => {
         var path =
-          getRelativeDirectoy() + data.fullPath.slice(0, -1).join("\\");
+          getSetting("Relative Directory") +
+          data.fullPath.slice(0, -1).join("\\");
 
         return html`
           <mobile-header>

@@ -54,7 +54,6 @@ export async function getMiniList(
   return values().then((values: Mini[]) => {
     let options = {
       includeScore: true,
-      // equivalent to `keys: [['author', 'tags', 'value']]`
       keys: ["tags", "name"],
       threshold: 0.4,
     };
@@ -80,5 +79,8 @@ export async function getDirectoryHandle(
   dir: string
 ): Promise<FileSystemHandle> {
   console.log("[IDB] Getting directory handle");
-  return await get(dir, createStore("My-Mini-Index", "directory-list"));
+  return await get(
+    dir,
+    createStore("My-Mini-Index-Directories", "directory-list")
+  );
 }

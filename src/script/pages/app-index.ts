@@ -54,6 +54,13 @@ export class AppIndex extends LitElement {
             },
           },
           {
+            path: "/settings",
+            component: "app-settings",
+            action: async () => {
+              await import("./app-settings.js");
+            },
+          },
+          {
             path: "/view/(.*)",
             component: "view-mini",
             action: async () => {

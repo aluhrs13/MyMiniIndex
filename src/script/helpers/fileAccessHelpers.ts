@@ -1,14 +1,24 @@
 import { renderSTL } from "./stl";
 import { Mini } from "./Mini";
 import { addMini, getDirectoryHandle } from "./idbAccessHelpers";
-import { getExcludeDirectories } from "./settings";
+import { getSetting, initSettings } from "./settings";
 
-const excludedDirectories = getExcludeDirectories();
+let excludedDirectories: string[];
 
 //TODO: Report the results of scanning
 export async function scanAllDirectories(dirs: Array<FileSystemHandle>) {
   console.log(`[File Access] Scanning Directories:`);
   console.log(dirs);
+  await initSettings();
+  //@ts-ignore
+  const excludedDirectoryList = getSetting("Excluded Directory Names");
+
+  if (excludedDirectories) {
+    excludedDirectories = excludedDirectoryList.split(",");
+  } else {
+    excludedDirectories = [""];
+  }
+
   for (let i = 0; i < dirs.length; i++) {
     console.log(`[File Access] Scanning ${dirs[i]}`);
 

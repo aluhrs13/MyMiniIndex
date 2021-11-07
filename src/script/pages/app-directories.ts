@@ -48,13 +48,13 @@ export class AppDirectories extends LitElement {
     super();
     try {
       this.directories = Array();
-      this.store = createStore("My-Mini-Index", "directory-list");
+      this.store = createStore("My-Mini-Index-Directories", "directory-list");
 
       values(this.store).then((values) => {
         this.directories = values;
       });
     } catch (error) {
-      console.error("[Page]" + error.message);
+      console.error("[Directories]" + error.message);
     }
   }
 

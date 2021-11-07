@@ -9,7 +9,7 @@ import { getImage, cleanUp } from "../helpers/stl";
 import { renderFile } from "../helpers/fileAccessHelpers";
 import { getMini, updateMini } from "../helpers/idbAccessHelpers";
 import { Mini, Status } from "../helpers/Mini";
-import { getExcludeTagSuggestions } from "../helpers/settings";
+import { getSetting, initSettings } from "../helpers/settings";
 
 @customElement("edit-mini")
 export class EditMini extends LitElement {
@@ -122,6 +122,7 @@ export class EditMini extends LitElement {
   _loadModel() {
     try {
       this._mini.then((data) => {
+        console.log(data);
         renderFile(data, this.renderRoot.querySelector("#model")).then(() => {
           this.renderRoot.querySelector("#loadModelButton").remove();
         });
@@ -148,6 +149,7 @@ export class EditMini extends LitElement {
 
   render() {
     this._mini = getMini(this.name);
+    initSettings();
 
     return until(
       this._mini.then((data) => {
@@ -156,7 +158,7 @@ export class EditMini extends LitElement {
         if (data.tags.length > 0) {
           tagData = data.tags.join(", ");
         } else {
-          const toRemove = getExcludeTagSuggestions();
+          const toRemove = getSetting("Excluded Tag Suggestions");
           tagData = data.name
             .split(" ")
             .concat(data.fullPath.slice(0, -1))

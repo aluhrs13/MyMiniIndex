@@ -46,7 +46,7 @@ export class NavBar extends LitElement {
       color: white;
       text-align: center;
       height: 100%;
-      width: 25%;
+      width: 20%;
       font-size: large;
     }
 
@@ -62,7 +62,7 @@ export class NavBar extends LitElement {
       justify-content: flex-end;
       align-items: center;
       height: 100%;
-      width: 33%;
+      width: 40%;
     }
   `;
 
@@ -99,6 +99,9 @@ export class NavBar extends LitElement {
           <a href="/pending" class="icon"
             ><br /><ion-icon name="enter"></ion-icon
           ></a>
+          <a href="/settings" class="icon"
+            ><br /><ion-icon name="settings-outline"></ion-icon
+          ></a>
         </div>
       `;
     } else {
@@ -117,6 +120,9 @@ export class NavBar extends LitElement {
             ></a>
             <a href="/pending" class="icon"
               ><br /><ion-icon name="enter"></ion-icon
+            ></a>
+            <a href="/settings" class="icon"
+              ><br /><ion-icon name="settings-outline"></ion-icon
             ></a>
           </div>
         </div>

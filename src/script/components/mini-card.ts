@@ -56,6 +56,9 @@ export class MiniCard extends LitElement {
 
     return until(
       this._mini.then((data) => {
+        if (!data.base64Image) {
+          data.base64Image = "/assets/icons/mstile-310x310.png";
+        }
         return html`
           <div class="card">
             <a href="/view/${this.name}">
