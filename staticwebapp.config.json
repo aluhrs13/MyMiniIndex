@@ -1,25 +1,5 @@
 {
-    "routes":[
-        {
-            "route": "/"
-        },
-        {
-            "route": "/pending"
-        },
-        {
-            "route": "/settings"
-        },
-        {
-            "route": "/pendingnext"
-        },
-        {
-            "route": "/directories"
-        },
-        {
-            "route": "/view/*"
-        },
-        {
-            "route": "/edit/*"
-        }
-    ]
+    "navigationFallback": {
+      "rewrite": "/index.html"
+    }
 }
