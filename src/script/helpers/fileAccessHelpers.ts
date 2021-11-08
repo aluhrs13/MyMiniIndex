@@ -11,7 +11,7 @@ export async function scanAllDirectories(dirs: Array<FileSystemHandle>) {
   console.log(dirs);
   await initSettings();
   //@ts-ignore
-  const excludedDirectoryList = getSetting("Excluded Directory Names");
+  const excludedDirectoryList = await getSetting("Excluded Directory Names");
 
   if (excludedDirectories) {
     excludedDirectories = excludedDirectoryList.split(",");
@@ -53,9 +53,10 @@ export async function traverseDirectory(
 }
 
 export async function renderFile(entry: Mini, parentElement: HTMLElement) {
+  console.log("[File Access] Rendering " + entry.name);
   let dirHandle = await getDirectoryHandle(entry.fullPath[0]);
   await verifyPermission(dirHandle);
-  console.log("[File Access] Rendering " + entry.name);
+
   //@ts-ignore
   let file = await entry.file.getFile();
   var reader = new FileReader();

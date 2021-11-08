@@ -8,20 +8,12 @@ export const settingsDescriptions = new Map([
     'The directory on your computer that is "above" all your STL directories. Used to create a link to the location on your computer.',
   ],
   [
-    "Excluded Tag Suggestions",
-    "List (comma separated) of words to not suggest as tags",
-  ],
-  [
     "Excluded Directory Names",
     "List of sub-directories to not search, for example if you don't want to index anything in a folder named 'Presupported'",
   ],
 ]);
 
-const settingsOptions = [
-  "Relative Directory",
-  "Excluded Tag Suggestions",
-  "Excluded Directory Names",
-];
+const settingsOptions = ["Relative Directory", "Excluded Directory Names"];
 
 export async function initSettings(): Promise<Map<string, string>> {
   try {
@@ -29,8 +21,6 @@ export async function initSettings(): Promise<Map<string, string>> {
     const store = createStore("My-Mini-Index-Settings", "settings");
     for (const setting of settingsOptions) {
       let value = await get(setting, store);
-
-      console.log(value);
       if (value != null) {
         settingsList.set(setting, value);
       } else {

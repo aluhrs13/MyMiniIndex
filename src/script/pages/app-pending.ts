@@ -28,10 +28,16 @@ export class AppPending extends LitElement {
 
   _goThroughAll() {
     this._minis.then((data) => {
-      console.log("[Pending] Redirecting to " + data[0].name);
-      Router.go({
-        pathname: "/edit/" + encodeURI(data[0].fullPath.join("/")),
-      });
+      if (data.length > 0) {
+        console.log("[Pending] Redirecting to " + data[0].name);
+        Router.go({
+          pathname: "/edit/" + encodeURI(data[0].fullPath.join("/")),
+        });
+      } else {
+        Router.go({
+          pathname: "/pending",
+        });
+      }
     });
   }
 

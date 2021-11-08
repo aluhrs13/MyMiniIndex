@@ -29,8 +29,6 @@ export class AppSettings extends LitElement {
   _settings: Promise<Map<string, string>>;
 
   _updateSetting(e) {
-    console.log(e.currentTarget);
-    console.log(e.currentTarget.value);
     setSetting(e.currentTarget.name, e.currentTarget.value);
   }
 
@@ -61,7 +59,6 @@ export class AppSettings extends LitElement {
             </li>
         `);
         }
-        console.log(data);
         return html`
           <mobile-header>
             <h1 slot="text">Settings</h1>

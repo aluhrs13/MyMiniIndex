@@ -147,9 +147,12 @@ export class EditMini extends LitElement {
     cleanUp();
   }
 
+  constructor() {
+    super();
+  }
+
   render() {
     this._mini = getMini(this.name);
-    initSettings();
 
     return until(
       this._mini.then((data) => {
@@ -159,12 +162,10 @@ export class EditMini extends LitElement {
           tagData = data.tags.join(", ");
         } else {
           const toRemove = getSetting("Excluded Tag Suggestions");
+          console.log("Removing: " + toRemove);
           tagData = data.name
             .split(" ")
             .concat(data.fullPath.slice(0, -1))
-            .filter((ele) => {
-              return !toRemove.includes(ele);
-            })
             .join(", ");
         }
 
