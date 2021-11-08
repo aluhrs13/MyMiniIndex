@@ -18,6 +18,8 @@ export async function addMini(
     if (miniTest) {
       return;
     } else {
+      mini.tags = mini.fullPath;
+
       await set(mini.fullPath.join("/"), mini);
     }
   } catch (error) {
