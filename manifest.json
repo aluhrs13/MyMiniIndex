@@ -1,7 +1,12 @@
 {
   "short_name": "MyMiniIndex",
-  "name": "MyMiniIndex: Organize your STL files to easily find the perfect 3d printable file",
+  "name": "MyMiniIndex",
   "icons": [
+    {
+      "src": "/assets/icons/512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
     {
       "src": "/assets/icons/favicon-196x196.png",
       "type": "image/png",
@@ -18,5 +23,5 @@
   "display": "standalone",
   "scope": "/",
   "theme_color": "#18312d",
-  "description": "3d printing STL organizer and visualizer."
+  "description": "STL organizer and visualizer for 3d printing enthusiasts to easily find the right files."
 }
