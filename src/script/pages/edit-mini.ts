@@ -161,8 +161,6 @@ export class EditMini extends LitElement {
         if (data.tags.length > 0) {
           tagData = data.tags.join(", ");
         } else {
-          const toRemove = getSetting("Excluded Tag Suggestions");
-          console.log("Removing: " + toRemove);
           tagData = data.name
             .split(" ")
             .concat(data.fullPath.slice(0, -1))
